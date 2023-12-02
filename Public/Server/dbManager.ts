@@ -87,6 +87,39 @@ export async function getReservations(){
     return await prisma.reservation.findMany();
 }
 
+export async function createUser(username : string, password : string){
+    const user = await prisma.user.findUnique({
+        where : {
+            username : username,
+        }
+    })
+    if(user){
+        return 'Username Taken'
+    }
+    const result = await prisma.user.create({
+        data : {
+            username : username,
+            password : password,
+        }
+    })
+    return result;
+}
+
+export async function login(username : string, password : string){
+    const user = await prisma.user.findUnique({
+        where : {
+            username : username
+        }
+    })
+    if(!user){
+        return 'Invalid Username';
+    }
+    if(user.password != password){
+        return 'Invalid Password'
+    }
+    return user;
+}
+
 
 
 main()

@@ -24,6 +24,8 @@ model Band {
   id Int @id @default(autoincrement())
   bandName String @unique
   gigsPlayed Int @default(0)
+  manager User @relation(fields : [userId], references : [id])
+  userId Int @unique
   reservations Reservation[]
 }
 
@@ -31,5 +33,11 @@ model Venue{
   id Int @id @default(autoincrement())
   venueName String @unique
   Reservations Reservation[]
+}
 
+model User{
+  id Int @id @default(autoincrement())
+  username String @unique
+  password String 
+  band Band? @relation()
 }

@@ -21,6 +21,14 @@ CREATE TABLE "Venue" (
     "venueName" TEXT NOT NULL
 );
 
+CREATE TABLE "User" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "username" TEXT NOT NULL,
+    "password" TEXT NOT NULL
+);
+
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
 
 CREATE UNIQUE INDEX "Band_bandName_key" ON "Band"("bandName");
 
