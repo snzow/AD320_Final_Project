@@ -1,4 +1,4 @@
-import {makeReservationDb,getReservationsByVenue, getReservations} from './dbManager'
+import {makeReservationDb,getReservationsByVenue, getReservations, getReservationsByBand} from './dbManager'
 
 
 /**
@@ -36,6 +36,21 @@ export async function getReservationsByVenueAsync(venue){
     const result = await getReservationsByVenue(venue);
     if(result == 'No Venue'){
         return 'No Venue'
+    }
+    else{
+        return result;
+    }
+}
+
+/**
+ * takes the bandname for a band and returns all current reservations for that band
+ * @param {string} band the name of the band to return reservations for
+ * @returns either 'No Band' if the band does not exist, or a list of reservations for that band
+ */
+export async function getReservationsByBandAsync(band){
+    const result = await getReservationsByBand(band);
+    if(result == 'No Band'){
+        return 'No Band'
     }
     else{
         return result;

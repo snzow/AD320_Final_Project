@@ -65,9 +65,29 @@ export async function getReservationsByVenue(venueName : string){
     return reservations;
 }
 
+export async function getReservationsByBand(bandName : string){
+    const band = await prisma.band.findFirst({
+        where: {
+          bandName : bandName
+        },
+      });
+      if (!band) {
+        return 'No Band';
+      }
+
+    const reservations = await prisma.reservation.findMany({
+        where : {
+            bandId : band.id
+        }
+    });
+    return reservations;
+}
+
 export async function getReservations(){
     return await prisma.reservation.findMany();
 }
+
+
 
 main()
   .then(async () => {
