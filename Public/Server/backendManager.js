@@ -27,6 +27,11 @@ export async function makeReservationAsync(reservation){
     }
 }
 
+/**
+ * takes the venuename for a venu and returns all current reservations at that venue
+ * @param {string} venue the name of the venue to return reservations for
+ * @returns either 'No Venue' if the venue does not exist, or a list of reservations at that venue
+ */
 export async function getReservationsByVenueAsync(venue){
     const result = await getReservationsByVenue(venue);
     if(result == 'No Venue'){
@@ -37,6 +42,10 @@ export async function getReservationsByVenueAsync(venue){
     }
 }
 
+/**
+ * returns all currently scheduled reservations
+ * @returns all reservations
+ */
 export async function getReservationsAsync(){
     return await getReservations();
 }
