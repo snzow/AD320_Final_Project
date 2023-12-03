@@ -1,11 +1,4 @@
-import {
-  makeReservationDb,
-  getReservationsByVenue,
-  getReservations,
-  getReservationsByBand,
-  createUser,
-  login,
-} from './dbManager';
+
 
 /**
  *  takes a reservation object containing a venueName, bandName, and Datetime. Attempts to create a reservation in the database.
@@ -19,7 +12,7 @@ import {
  * }
  * @returns the http code to send and the value of the db result
  */
-export async function makeReservationAsync(reservation) {
+async function makeReservationAsync(reservation) {
   const result = await makeReservationDb(reservation);
   if (result == 'No Venue' || result == 'Time Unavailable') {
     return {
@@ -38,7 +31,7 @@ export async function makeReservationAsync(reservation) {
  * @param {string} venue the name of the venue to return reservations for
  * @returns either 'No Venue' if the venue does not exist, or a list of reservations at that venue
  */
-export async function getReservationsByVenueAsync(venue) {
+async function getReservationsByVenueAsync(venue) {
   const result = await getReservationsByVenue(venue);
   if (result == 'No Venue') {
     return 'No Venue';
@@ -52,7 +45,7 @@ export async function getReservationsByVenueAsync(venue) {
  * @param {string} band the name of the band to return reservations for
  * @returns either 'No Band' if the band does not exist, or a list of reservations for that band
  */
-export async function getReservationsByBandAsync(band) {
+async function getReservationsByBandAsync(band) {
   const result = await getReservationsByBand(band);
   if (result == 'No Band') {
     return 'No Band';
@@ -65,7 +58,7 @@ export async function getReservationsByBandAsync(band) {
  * returns all currently scheduled reservations
  * @returns all reservations
  */
-export async function getReservationsAsync() {
+async function getReservationsAsync() {
   return await getReservations();
 }
 
@@ -75,7 +68,7 @@ export async function getReservationsAsync() {
  * @param {string} password 
  * @returns 
  */
-export async function createAccountAsync(username, password) {
+async function createAccountAsync(username, password) {
   const result = await createUser(username, password);
   if (result == 'Username Taken') {
     return {
@@ -95,7 +88,7 @@ export async function createAccountAsync(username, password) {
  * @param {string} password 
  * @returns 
  */
-export async function loginAsync(username, password) {
+async function loginAsync(username, password) {
   const result = await login(username, password);
 
   if (result == 'Invalid Username' || result == 'Invalid Password') {

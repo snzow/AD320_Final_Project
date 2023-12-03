@@ -117,62 +117,175 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
-  return bundleURL;
-}
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
-  return '/';
-}
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
-}
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-function updateLink(link) {
-  var newLink = link.cloneNode();
-  newLink.onload = function () {
-    link.remove();
-  };
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-var cssTimeout = null;
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
+})({"index.js":[function(require,module,exports) {
+"use strict";
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.location.pathname.endsWith('login.html')) {
+    document.getElementById('login-form').addEventListener('submit', handleLogin);
+    prefillUsername(); // Prefill the username if it's saved in localStorage
+  } else {
+    // Show the main page
+
+    // Show band availability section for band users
+    if (localStorage.getItem('userType') === 'band') {
+      document.getElementById('band-availability').style.display = 'block';
+    } else {
+      document.getElementById('band-availability').style.display = 'none';
+      var reserveBandElement = document.getElementById('reserve-band'); // Replace with lement ID
+      if (reserveBandElement) {
+        reserveBandElement.addEventListener('click', checkLoginAndRedirect);
       }
     }
-    cssTimeout = null;
-  }, 50);
+    fetchBands();
+  }
+});
+function fetchBands() {
+  fetch('/api/bands').then(function (response) {
+    return response.json();
+  }).then(function (bands) {
+    var bandsList = document.getElementById('bands-list');
+    bands.forEach(function (band) {
+      var bandDiv = document.createElement('div');
+      bandDiv.innerHTML = "<h3>".concat(band.name, "</h3><p>").concat(band.description, "</p>");
+      bandDiv.addEventListener('click', function () {
+        return showBandDetails(band.id);
+      });
+      bandsList.appendChild(bandDiv);
+    });
+  }).catch(function (error) {
+    console.error('Error fetching bands:', error);
+  });
 }
-module.exports = reloadCSS;
-},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"styles.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+function handleLogin(event) {
+  event.preventDefault();
+  var username = document.getElementById('username').value;
+  var password = document.getElementById('password').value;
+
+  // Test if the username and password match the specific credentials
+  if (username === 'Alice' && password === '1234') {
+    // Perform the login actions
+    localStorage.setItem('username', username);
+    var userType = document.getElementById('userType').value;
+    localStorage.setItem('userType', userType);
+
+    // Redirect to main page or show success message
+    window.location.href = 'index.html'; // Redirect to the main page after login
+  } else {
+    // Handle login failure
+    alert('Login failed. Please try again.');
+  }
+}
+
+/* 
+event.preventDefault();
+const username = document.getElementById('username').value;
+const password = document.getElementById('password').value;
+  // Saving username to localStorage
+localStorage.setItem('username', username);
+const userType = document.getElementById('userType').value;
+localStorage.setItem('userType', userType);
+  // Replace with your API endpoint
+fetch('/api/login', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username, password })
+})
+.then(response => response.json())
+.then(data => {
+    if (data.success) {
+        // Handle successful login
+        // Redirect to main page or show success message
+        window.location.href = 'index.html'; // Redirect to the main page after login
+    } else {
+        // Handle login failure
+        alert('Login failed. Please try again.');
+    }
+})
+.catch(error => {
+    console.error('Error during login:', error);
+    alert('An error occurred while attempting to log in.');
+});
+*/
+
+function prefillUsername() {
+  var savedUsername = localStorage.getItem('username');
+  if (savedUsername) {
+    document.getElementById('username').value = savedUsername;
+  }
+}
+function checkLoginAndRedirect(event) {
+  event.preventDefault(); // Prevent default action if it's a link
+
+  // Check if user is logged in
+  if (localStorage.getItem('username')) {
+    window.location.href = 'reserve.html'; // Redirect to reservation page
+  } else {
+    window.location.href = 'login.html'; // Redirect to login page
+  }
+}
+
+function showReservationForm() {
+  // Logic to show reservation form after successful login
+  var reservationSection = document.getElementById('reserve');
+  if (localStorage.getItem('userType') === 'venue') {
+    reservationSection.style.display = 'block';
+  } else {
+    reservationSection.style.display = 'none';
+  }
+  // Populate reservation form fields as necessary
+}
+
+function showBandDetails(bandId) {
+  fetch("/api/bands/".concat(bandId)).then(function (response) {
+    return response.json();
+  }).then(function (bandDetails) {
+    // Display band details in a specific section or modal
+  }).catch(function (error) {
+    console.error('Error fetching band details:', error);
+  });
+}
+document.getElementById('reservation-form').addEventListener('submit', handleReservation);
+function handleReservation(event) {
+  event.preventDefault();
+  var time = document.getElementById('time').value;
+  var venueId = document.getElementById('venueId').value;
+  var bandId = document.getElementById('bandId').value;
+
+  // Constructing the reservation data object
+  var reservationData = {
+    time: time,
+    venueId: parseInt(venueId, 10),
+    // Convert to integer as your database expects an INTEGER
+    bandId: parseInt(bandId, 10) // Convert to integer
+  };
+
+  // API call to reserve a band
+  fetch('/api/reserve', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(reservationData)
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    if (data.success) {
+      // Handle successful reservation
+      alert("Reservation confirmed! Confirmation ID: ".concat(data.reservationId));
+      // Optionally, clear the form or redirect the user
+    } else {
+      // Handle reservation failure
+      alert('Reservation failed. Please try again.');
+    }
+  }).catch(function (error) {
+    console.error('Error making reservation:', error);
+    alert('An error occurred while making the reservation.');
+  });
+}
+},{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -341,5 +454,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/styles.8986bff4.js.map
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], null)
+//# sourceMappingURL=/public.e31bb0bc.js.map
