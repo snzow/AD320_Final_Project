@@ -4,8 +4,7 @@
   "description": "For your final project you are tasked with creating a fully-fledged website. This full stack assignment will involve HTML, CSS, client-side JavaScript, server-side JavaScript, and a SQL database (**no file I/O allowed**). Although there are specific requirements, you have a lot of freedom in how you implement and design your website, like a CP. Since this is a full stack assignment, you might want to include your work in your portfolio.",
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html",
-    "backend" : "node app.js"
+    "start": "parcel index.html"
   },
   "author": "",
   "license": "ISC",

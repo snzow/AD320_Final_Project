@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Bands</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Available Bands</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="reserve.html">Reserve</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="reservation-container">
+        <h2>Choose a Date and Time:</h2>
+        <form id="reservation-form">
+            Date: <input type="date" id="date"><br>
+            Time: <input type="time" id="time"><br>
+            <button type="button" onclick="showAvailableBands()">Check Availability</button>
+        </form>
+        <div id="available-bands">
+            <!-- Available bands will be displayed here using JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        function showAvailableBands() {
+            // Get selected date and time
+            var selectedDate = document.getElementById("date").value;
+            var selectedTime = document.getElementById("time").value;
+
+            // You can add your logic to fetch and display available bands here
+            // For now, let's assume an example list of available bands
+            var availableBands = ["Band 1", "Band 2", "Band 3"];
+
+            // Display available bands
+            var bandsList = "<h2>Available Bands:</h2><ul>";
+            for (var i = 0; i < availableBands.length; i++) {
+                bandsList += "<li>" + availableBands[i] + "</li>";
+            }
+            bandsList += "</ul>";
+
+            document.getElementById("available-bands").innerHTML = bandsList;
+        }
+    </script>
+</body>
+</html>
