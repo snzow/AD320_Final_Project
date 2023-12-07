@@ -1,28 +1,55 @@
-
 "use strict";
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.endsWith('login.html')) {
-        document.getElementById('login-form').addEventListener('submit', handleLogin);
-        prefillUsername(); // Prefill the username if it's saved in localStorage
-    } else {
-        // Show the main page
+    prefillUsername();
+    updateDisplayBasedOnUserType();
 
-// Show band availability section for band users
-if (localStorage.getItem('userType') === 'band') {
-    document.getElementById('band-availability').style.display = 'block';
-} else {
-    document.getElementById('band-availability').style.display = 'none';
-    const reserveBandElement = document.getElementById('reserve-band'); // Replace with lement ID
-    if (reserveBandElement) {
-        reserveBandElement.addEventListener('click', checkLoginAndRedirect);
+    const loginLogoutButton = document.getElementById('login-logout-button');
+    if (loginLogoutButton) {
+        loginLogoutButton.addEventListener('click', handleLoginLogout);
     }
-}
-
-        fetchBands();
+    
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
     }
     
 });
+
+function updateDisplayBasedOnUserType() {
+    const userType = localStorage.getItem('userType');
+    const loginLogoutButton = document.getElementById('login-logout-button');
+
+    const scheduleSection = document.getElementById('schedule');
+    const reserveSection = document.getElementById('reserve');
+    const availableBandSection = document.getElementById('availableBand');
+
+    if (userType === 'band' || userType === 'venue') {
+        if (loginLogoutButton) {
+            loginLogoutButton.textContent = 'Log Out';
+        }
+    } else {
+        if (loginLogoutButton) {
+            loginLogoutButton.textContent = 'Log In';
+        }
+    }
+
+    if (userType === 'band') {
+        if (scheduleSection) scheduleSection.style.display = 'block';
+        if (reserveSection) reserveSection.style.display = 'none';
+        if (availableBandSection) availableBandSection.style.display = 'none';
+    } else if (userType === 'venue') {
+        if (scheduleSection) scheduleSection.style.display = 'none';
+        if (reserveSection) reserveSection.style.display = 'block';
+        if (availableBandSection) availableBandSection.style.display = 'block';
+    } else {
+        // Hide both sections for guests or undefined user types
+        if (scheduleSection) scheduleSection.style.display = 'none';
+        if (reserveSection) reserveSection.style.display = 'none';
+        if (availableBandSection) availableBandSection.style.display = 'none';
+    }
+}
+
 
 function fetchBands() {
     fetch('/api/bands')
@@ -39,6 +66,21 @@ function fetchBands() {
         .catch(error => {
             console.error('Error fetching bands:', error);
         });
+}
+
+function handleLoginLogout(event) {
+    event.preventDefault();
+    const userType = localStorage.getItem('userType');
+    
+    if (userType === 'band' || userType === 'venue') {
+        // User is logged in, so log them out
+        localStorage.removeItem('userType');
+        updateDisplayBasedOnUserType(); // Update display after logout
+
+    } else {
+        // User is not logged in, redirect to the login page
+        window.location.href = 'login.html';
+    }
 }
 
 function handleLogin(event) {
@@ -98,31 +140,11 @@ function handleLogin(event) {
 
 function prefillUsername() {
     const savedUsername = localStorage.getItem('username');
-    if (savedUsername) {
-        document.getElementById('username').value = savedUsername;
+    const usernameInput = document.getElementById('username');
+
+    if (savedUsername && usernameInput) {
+        usernameInput.value = savedUsername;
     }
-}
-
-function checkLoginAndRedirect(event) {
-    event.preventDefault(); // Prevent default action if it's a link
-
-    // Check if user is logged in
-    if (localStorage.getItem('username')) {
-        window.location.href = 'reserve.html'; // Redirect to reservation page
-    } else {
-        window.location.href = 'login.html'; // Redirect to login page
-    }
-}
-
-function showReservationForm() {
-    // Logic to show reservation form after successful login
-    const reservationSection = document.getElementById('reserve');
-    if (localStorage.getItem('userType') === 'venue') {
-    reservationSection.style.display = 'block';
-} else {
-    reservationSection.style.display = 'none';
-}
-    // Populate reservation form fields as necessary
 }
 
 function showBandDetails(bandId) {

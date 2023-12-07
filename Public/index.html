@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Band Reservation Site</title>
+    <title>Band Reservation Site</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
@@ -11,38 +11,34 @@
     <header>
         <h1>Band Reservation Platform</h1>
         <nav>
-            <ul>
+          <ul>
               <li><a href="#home">Home</a></li>
-              <li><a href="login.html">Login</a></li>
-            </ul>
-        </nav>
+              <li><a id="login-logout-button" href="login.html">Log In</a></li>
+          </ul>
+      </nav>
+      
     </header>
     <main>
-        <section id="bands">
-            <h2>Available Bands</h2>
-            <div id="bands-list">
-                <!-- Bands will be loaded here -->
-            </div>
+        <section id="schedule">
+          <h2>
+            <a href="schedule.html">See and modify your schedule</a>
+          </h2>
+        </section>
+        <section id="availableBand">
+          <h2>
+            <a href="availableBand.html">See Available Bands</a>
+          </h2>
         </section>
         <section id="reserve">
-            <h2>
-              <a href="reserve.html" onclick="checkLoginAndRedirect()">Reserve a Band</a>
-            </h2>
-            <form id="reservation-form">
-                <!-- Reservation form goes here -->
-            </form>
+          <h2>
+            <a href="reserve.html">Reserve a Band</a>
+          </h2>
         </section>
         <section id="contact">
             <h2>Contact Us</h2>
             <!-- Contact information -->
         </section>
     
-<section id="band-availability" style="display: none;">
-    <h2>Set Your Availability</h2>
-    <form id="availability-form">
-        <!-- Availability form goes here -->
-    </form>
-</section>
 </main>
     <footer>
         <p>© 2023 Band Reservation Platform</p>
