@@ -72,6 +72,163 @@ app.get('/api/bands/:bandId', function (req, res) {
 
 });
 
+app.get('/api/venues', function (req, res) {
+  res.type('json');
+
+  let response = 
+  `
+  [ {
+      "id": "1",
+      "name": "House of Hummus",
+      "description": "Mediterranean eats and libations",
+      "manager": "4"
+    },
+    {
+      "id": "2",
+      "name": "The Zax",
+      "description": "Low key hangout spot with groovy vibes",
+      "manager": "3"
+    }
+  ]
+  `
+
+  res.send(response);
+});
+
+app.get('/api/venues/:venueId', function (req, res) {
+  res.type('json');
+
+  let response = "";
+  let venueId = req.params.venueId;
+
+  if (venueId=="1") {
+      response = 
+      `
+      {
+        "id": "1",
+        "name": "House of Hummus",
+        "description": "Mediterranean eats and libations",
+        "manager": "4"
+        }
+      `;
+  } else if ( venueId=="2") {
+    response = 
+    `
+    {
+      "id": "2",
+      "name": "The Zax",
+      "description": "Low key hangout spot with groovy vibes",
+      "manager": "3"
+    }
+    `;
+  } else {
+    res.status(400).send(`{"error": "Venue with id ${venueId} not found" }`);
+    return;
+  }
+
+  res.send(response);
+
+});
+
+app.get('/api/users', function (req, res) {
+  res.type('json');
+
+  let response = 
+  `
+  [ 
+    {
+      "id": "1",
+      "name": "Alice",
+      "username": "alice",
+      "type": "band",
+      "managerOf": "2"
+    },
+    {
+      "id": "2",
+      "name": "Bronson",
+      "username": "bronson",
+      "type": "band",
+      "managerOf": "1"
+    },
+    {
+      "id": "3",
+      "name": "Clarice",
+      "username": "clarice",
+      "type": "venue",
+      "managerOf": "2"
+    },
+    {
+      "id": "4",
+      "name": "Davendra",
+      "username": "davendra",
+      "type": "venue",
+      "managerOf": "1"
+    }
+  ]
+  `
+
+  res.send(response);
+});
+
+app.get('/api/users/:userId', function (req, res) {
+  res.type('json');
+
+  let response = "";
+  let userId = req.params.userId;
+
+  if (userId=="1") {
+      response = 
+      `
+      {
+        "id": "1",
+        "name": "Alice",
+        "username": "alice",
+        "type": "band",
+        "managerOf": "2"
+      }
+      `;
+  } else if ( userId=="2") {
+    response = 
+    `
+    {
+      "id": "2",
+      "name": "Bronson",
+      "username": "bronson",
+      "type": "band",
+      "managerOf": "1"
+    }
+    `;
+  } else if ( userId=="3") {
+    response = 
+    `
+    {
+      "id": "3",
+      "name": "Clarice",
+      "username": "clarice",
+      "type": "venue",
+      "managerOf": "2"
+    }
+    `;
+  } else if ( userId=="4") {
+    response = 
+    `
+    {
+      "id": "4",
+      "name": "Davendra",
+      "username": "davendra",
+      "type": "venue",
+      "managerOf": "1"
+    }
+    `;
+  } else {
+    res.status(400).send(`{"error": "User with id ${userId} not found" }`);
+    return;
+  }
+
+  res.send(response);
+
+});
+
 app.get('/login/:username/:password', async function (req, res) {
   let user = req.params.username;
   let pw = req.params.password;
