@@ -1,7 +1,10 @@
 const express = require('express');
-const { loginAsync } = require('./Server/backendManager');
+//const { loginAsync } = require('./Server/backendManager');
+const cors = require('cors');
 const app = express();
 const port = 3001;
+
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('Hello from the backend!');
@@ -9,6 +12,64 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+});
+
+app.get('/api/bands', function (req, res) {
+  res.type('json');
+
+  let response = 
+  `
+  [ {
+      "id": "1",
+      "name": "Aodhan and the Programmers",
+      "description": "Nerdcore house beats",
+      "manager": "2"
+    },
+    {
+      "id": "2",
+      "name": "The DOM Element Collective",
+      "description": "Lo-fi EDM chillwave",
+      "manager": "1"
+    }
+  ]
+  `
+
+  res.send(response);
+});
+
+app.get('/api/bands/:bandId', function (req, res) {
+  res.type('json');
+
+  let response = "";
+  let bandId = req.params.bandId;
+
+  if (bandId=="1") {
+      response = 
+      `
+      {
+        "id": "1",
+        "name": "Aodhan and the Programmers",
+        "description": "Nerdcore house beats",
+        "manager": "2"
+      }
+      `;
+  } else if ( bandId=="2") {
+    response = 
+    `
+    {
+      "id": "2",
+      "name": "The DOM Element Collective",
+      "description": "Lo-fi EDM chillwave",
+      "manager": "1"
+    }
+    `;
+  } else {
+    res.status(400).send(`{"error": "Band with id ${bandId} not found" }`);
+    return;
+  }
+
+  res.send(response);
+
 });
 
 app.get('/login/:username/:password', async function (req, res) {

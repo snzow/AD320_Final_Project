@@ -2,6 +2,9 @@
 
 (function () {
 
+    const API_ROOT = "http://localhost:3001";
+
+
     window.addEventListener("load", init);
 
     function init() {
@@ -56,7 +59,7 @@
 
 
     function fetchBands() {
-        fetch('/api/bands')
+        fetch(API_ROOT + '/api/bands')
             .then(response => response.json())
             .then(bands => {
                 const bandsList = document.getElementById('bands-list');
@@ -152,7 +155,7 @@
     }
 
     function showBandDetails(bandId) {
-        fetch(`/api/bands/${bandId}`)
+        fetch(API_ROOT + `/api/bands/${bandId}`)
             .then(response => response.json())
             .then(bandDetails => {
                 // Display band details in a specific section or modal
