@@ -2,6 +2,9 @@
 
 (function () {
 
+    const API_ROOT = "http://localhost:3001";
+    
+
     window.addEventListener("load", init);
 
     function init() {
