@@ -101,13 +101,12 @@ async function createUser(username, password) {
 
 export async function login(username, password) {
   console.log('here');
-  try{/*
+  try{
     const user = await prisma.user.findUnique({
       where: {
         username: username
       }
-    })*/
-    return 'Invalid Password';
+    })
     console.log('then');
     if (!user) {
       console.log('no user');
