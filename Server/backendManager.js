@@ -90,8 +90,9 @@ export async function createAccountAsync(username, password) {
  */
 export async function loginAsync(username, password) {
   const result = await login(username, password);
-
+  console.log('here after');
   if (result == 'Invalid Username' || result == 'Invalid Password') {
+    console.log('400');
     return {
       code: 400,
       value: result,

@@ -100,18 +100,31 @@ async function createUser(username, password) {
 }
 
 export async function login(username, password) {
-  const user = await prisma.user.findUnique({
-    where: {
-      username: username
+  console.log('here');
+  try{/*
+    const user = await prisma.user.findUnique({
+      where: {
+        username: username
+      }
+    })*/
+    return 'Invalid Password';
+    console.log('then');
+    if (!user) {
+      console.log('no user');
+      return 'Invalid Username';
     }
-  })
-  if (!user) {
-    return 'Invalid Username';
+    if (user.password != password) {
+      console.log('bad password');
+      return 'Invalid Password'
+    }
+    console.log('here');
+    return user;
   }
-  if (user.password != password) {
-    return 'Invalid Password'
+  catch{
+    console.log('error caught');
+    return 'Invalid Username'
   }
-  return user;
+ 
 }
 
 main()
