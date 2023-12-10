@@ -1,5 +1,5 @@
 /* Basic Reset */
-* {
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -53,7 +53,7 @@ section {
     padding: 15px;
     width: 80%;
     background-color: white;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Band list styling */
@@ -96,7 +96,7 @@ section {
     }
 }
 
-/* Reservation and Login Page Styles */
+/* Common styles for reservation and login containers */
 .reservation-container, .login-container {
     max-width: 600px;
     margin: 2rem auto;
@@ -104,22 +104,27 @@ section {
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: white;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* Common styles for forms in reservation and login containers */
 .reservation-form, .login-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.reservation-form input, .reservation-form select, .login-form input[type="text"], .login-form input[type="password"] {
+.reservation-form input,
+.reservation-form select,
+.login-form input[type="text"],
+.login-form input[type="password"] {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-.reservation-form button, .login-form button {
+.reservation-form button,
+.login-form button {
     padding: 10px;
     background-color: #333;
     color: white;
@@ -129,11 +134,12 @@ section {
     transition: background-color 0.3s ease;
 }
 
-.reservation-form button:hover, .login-form button:hover {
+.reservation-form button:hover,
+.login-form button:hover {
     background-color: #444;
 }
 
-/* Style for the booking schedule container and individual booking entries */
+/* Common styles for booking schedule and individual booking entries */
 #booking-schedule, .booking-entry {
     margin: 20px;
     padding: 20px;
@@ -148,4 +154,67 @@ section {
     padding: 10px;
     margin: 10px 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the Contact Us section */
+#contact {
+    background-color: #f5f5f5;
+    padding: 20px;
+}
+
+/* Style the Contact Us heading */
+#contact h2 {
+    color: #333;
+}
+
+/* Style the contact information list */
+#contact ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Style individual contact information items */
+#contact ul li {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #666;
+}
+
+/* Add some spacing between the contact information items */
+#contact ul li + li {
+    margin-top: 10px;
+}
+
+/* Styles for the available bands section */
+#bands-display {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#bands-display ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#bands-display li {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#bands-display li ul {
+    margin-top: 5px;
+}
+
+#bands-display li ul li {
+    background-color: #e7e7e7;
+    margin-bottom: 5px;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 0.9em;
 }

@@ -1,4 +1,13 @@
+/**
+ * Name: Team Crimson Kings
+ * Date: December 9, 2023
+ * This JavaScript file implements the user interface for a band reservation project.
+ * It allows a venue to reserve a band based on the date and time that they choose.
+ **/
+
 "use strict";
+
+const { userInfo } = require("os");
 
 (function () {
 
@@ -9,7 +18,7 @@
 
     function init() {
             prefillUsername();
-            updateDisplayBasedOnUserType();
+            fetchUserTypeAndDisplay();
 
             const loginLogoutButton = document.getElementById('login-logout-button');
             if (loginLogoutButton) {
@@ -28,8 +37,9 @@
         const loginLogoutButton = document.getElementById('login-logout-button');
 
         const scheduleSection = document.getElementById('schedule');
-        const reserveSection = document.getElementById('reserve');
+        const availableTimeSection = document.getElementById('availableTime-section');
         const availableBandSection = document.getElementById('availableBand');
+        const reserveListSection = document.getElementById('reserveList');
 
         if (userType === 'band' || userType === 'venue') {
             if (loginLogoutButton) {
@@ -41,38 +51,44 @@
             }
         }
 
+        console.log(userType);
+
         if (userType === 'band') {
             if (scheduleSection) scheduleSection.style.display = 'block';
-            if (reserveSection) reserveSection.style.display = 'none';
+            if (availableTimeSection) availableTimeSection.style.display = 'block';
             if (availableBandSection) availableBandSection.style.display = 'none';
+            if (reserveListSection) reserveListSection.style.display = 'none';
         } else if (userType === 'venue') {
             if (scheduleSection) scheduleSection.style.display = 'none';
-            if (reserveSection) reserveSection.style.display = 'block';
+            if (availableTimeSection) availableTimeSection.style.display = 'none';
             if (availableBandSection) availableBandSection.style.display = 'block';
+            if (reserveListSection) reserveListSection.style.display = 'block';
         } else {
             // Hide both sections for guests or undefined user types
             if (scheduleSection) scheduleSection.style.display = 'none';
-            if (reserveSection) reserveSection.style.display = 'none';
+            if (availableTimeSection) availableTimeSection.style.display = 'none';
             if (availableBandSection) availableBandSection.style.display = 'none';
+            if (reserveListSection) reserveListSection.style.display = 'none';
         }
     }
 
-
-    function fetchBands() {
-        fetch(API_ROOT + '/api/bands')
-            .then(response => response.json())
-            .then(bands => {
-                const bandsList = document.getElementById('bands-list');
-                bands.forEach(band => {
-                    const bandDiv = document.createElement('div');
-                    bandDiv.innerHTML = `<h3>${band.name}</h3><p>${band.description}</p>`;
-                    bandDiv.addEventListener('click', () => showBandDetails(band.id));
-                    bandsList.appendChild(bandDiv);
+    function fetchUserTypeAndDisplay() {
+        const username = localStorage.getItem('username');
+        if (username) {
+            fetch(API_ROOT + `/api/userInfo/${username}`)
+                .then(response => response.json())
+                .then(user => {
+                    if (user && user.type) {
+                        localStorage.setItem('userType', user.type);
+                        updateDisplayBasedOnUserType();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user type:', error);
                 });
-            })
-            .catch(error => {
-                console.error('Error fetching bands:', error);
-            });
+        } else {
+            updateDisplayBasedOnUserType();
+        }
     }
 
     function handleLoginLogout(event) {
@@ -95,12 +111,20 @@
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
-        // Test if the username and password match the specific credentials
-        if (username === 'Alice' && password === '1234') {
+        // Test if the username and password match the specific credentials. alice for band, clarice for venu
+        if ((username === 'alice' && password === '1234')|| (username === 'clarice' && password === '1234')) {
             // Perform the login actions
             localStorage.setItem('username', username);
-            const userType = document.getElementById('userType').value;
-            localStorage.setItem('userType', userType);
+            var url = API_ROOT + '/api/userInfo/' + username
+            
+            fetch(url)
+            .then(response => response.json())
+            .then(userInfo => {
+                localStorage.setItem('userType', userInfo.type);
+            })
+            .catch(error => {
+                console.error('Error fetching userInfo:', error);
+            });
             
             // Redirect to main page or show success message
             window.location.href = 'index.html'; // Redirect to the main page after login
@@ -109,41 +133,6 @@
             alert('Login failed. Please try again.');
         }
     }
-
-        /* 
-        event.preventDefault();
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        // Saving username to localStorage
-        localStorage.setItem('username', username);
-        const userType = document.getElementById('userType').value;
-        localStorage.setItem('userType', userType);
-
-        // Replace with your API endpoint
-        fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Handle successful login
-                // Redirect to main page or show success message
-                window.location.href = 'index.html'; // Redirect to the main page after login
-            } else {
-                // Handle login failure
-                alert('Login failed. Please try again.');
-            }
-        })
-        .catch(error => {
-            console.error('Error during login:', error);
-            alert('An error occurred while attempting to log in.');
-        });
-    */
 
     function prefillUsername() {
         const savedUsername = localStorage.getItem('username');
@@ -163,46 +152,5 @@
             .catch(error => {
                 console.error('Error fetching band details:', error);
             });
-    }
-
-    document.getElementById('reservation-form').addEventListener('submit', handleReservation);
-
-    function handleReservation(event) {
-        event.preventDefault();
-        
-        const time = document.getElementById('time').value;
-        const venueId = document.getElementById('venueId').value;
-        const bandId = document.getElementById('bandId').value;
-        
-        // Constructing the reservation data object
-        const reservationData = {
-            time: time,
-            venueId: parseInt(venueId, 10),  // Convert to integer as your database expects an INTEGER
-            bandId: parseInt(bandId, 10)     // Convert to integer
-        };
-
-        // API call to reserve a band
-        fetch('/api/reserve', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(reservationData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Handle successful reservation
-                alert(`Reservation confirmed! Confirmation ID: ${data.reservationId}`);
-                // Optionally, clear the form or redirect the user
-            } else {
-                // Handle reservation failure
-                alert('Reservation failed. Please try again.');
-            }
-        })
-        .catch(error => {
-            console.error('Error making reservation:', error);
-            alert('An error occurred while making the reservation.');
-        });
     }
 })();

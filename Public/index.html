@@ -16,33 +16,50 @@
               <li><a id="login-logout-button" href="login.html">Log In</a></li>
           </ul>
       </nav>
-      
     </header>
     <main>
         <section id="schedule">
-          <h2>
-            <a href="schedule.html">See and modify your schedule</a>
-          </h2>
+          <h2>Your booked schedule</h2>
+          <div id="schedule-display">
+            <!-- Schedule will be displayed here -->
+          </div>
+        </section>
+        <section id="availableTime-section">
+          <h2>Add Available Time</h2>
+          <form id="availableTime-form">
+              <label for="date">Date:</label>
+              <input type="date" id="date" name="date" required><br>
+              <label for="start-time">Start Time:</label>
+              <input type="time" id="start-time" name="start-time" required><br>
+              <button type="submit">Update Available Time</button>
+          </form>
         </section>
         <section id="availableBand">
-          <h2>
-            <a href="availableBand.html">See Available Bands</a>
-          </h2>
+          <h2>Available Bands and time they can perform</h2>
+          <div id="bands-display">
+            <!-- Available bands will be displayed here -->
+          </div>
         </section>
-        <section id="reserve">
-          <h2>
-            <a href="reserve.html">Reserve a Band</a>
-          </h2>
+        <section id="reserveList">
+          <h2>Your Reservations</h2>
+          <div id="reservations-display">
+            <!-- Reservations will be displayed here -->
+          </div>
         </section>
         <section id="contact">
-            <h2>Contact Us</h2>
-            <!-- Contact information -->
+          <h2>Contact Us</h2>
+          <ul>
+              <li>Phone: +1 (123) 456-7890</li>
+              <li>Email: contact@bandreservation.com</li>
+              <li>Address: 7647 Rockville Rd., Seattle, WA 98705, USA</li>
+          </ul>
         </section>
-    
-</main>
+    </main>
     <footer>
         <p>© 2023 Band Reservation Platform</p>
     </footer>
     <script src="index.js"></script>
+    <script src="venue.js"></script>
+    <script src="band.js"></script>
 </body>
 </html>

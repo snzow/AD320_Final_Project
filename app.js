@@ -72,6 +72,109 @@ app.get('/api/bands/:bandId', function (req, res) {
 
 });
 
+app.get('/api/allBandAvailabilities', function (req, res) {
+  res.type('json');
+
+  let allBandAvailabilities = [
+    {
+        "id": "1",
+        "name": "Aodhan and the Programmers",
+        "description": "Nerdcore house beats",
+        "availableTimes": [
+          { "timeId": "101", "timeString": "2023-12-10 19:00" },
+          { "timeId": "102", "timeString": "2023-12-12 20:00" },
+          { "timeId": "103", "timeString": "2023-12-15 21:00" }
+      ]
+    },
+    {
+        "id": "2",
+        "name": "The DOM Element Collective",
+        "description": "Lo-fi EDM chillwave",
+        "availableTimes": [
+          { "timeId": "201", "timeString": "2023-12-11 18:00" },
+          { "timeId": "202", "timeString": "2023-12-13 19:30" },
+          { "timeId": "203", "timeString": "2023-12-16 20:00" }
+      ]
+    },
+];
+
+  res.send(JSON.stringify(allBandAvailabilities));
+});
+
+app.get('/api/bandAvailability/:bandId', function (req, res) {
+  res.type('json');
+
+  let response = "";
+  let bandId = req.params.bandId;
+
+  switch(bandId) {
+      case "1":
+          response = {
+            "availableTimes": [
+              { "timeId": "101", "timeString": "2023-12-10 19:00" },
+              { "timeId": "102", "timeString": "2023-12-12 20:00" },
+              { "timeId": "103", "timeString": "2023-12-15 21:00" }
+          ]
+          };
+          break;
+      case "2":
+          response = {
+            "availableTimes": [
+              { "timeId": "201", "timeString": "2023-12-11 18:00" },
+              { "timeId": "202", "timeString": "2023-12-13 19:30" },
+              { "timeId": "203", "timeString": "2023-12-16 20:00" }
+          ]
+          };
+          break;
+      default:
+          res.status(400).send(`{"error": "Band with id ${bandId} not found"}`);
+          return;
+  }
+
+  res.send(JSON.stringify(response));
+});
+
+app.get('/api/band_schedule/:bandId', function (req, res) {
+  let bandId = req.params.bandId;
+
+  // Mock data representing reservations for a band
+  let reservations = [
+      {
+          "reservationId": "res1",
+          "bandId": bandId,
+          "venueName": "Venue A",
+          "date": "2023-12-10",
+          "startTime": "19:00",
+          "endTime": "21:00"
+      },
+      {
+          "reservationId": "res2",
+          "bandId": bandId,
+          "venueName": "Venue B",
+          "date": "2023-12-12",
+          "startTime": "20:00",
+          "endTime": "22:00"
+      }
+  ];
+
+  // Filter reservations by the bandId
+  let filteredReservations = reservations.filter(reservation => reservation.bandId === bandId);
+
+  // Sending the filtered list of reservations as JSON response
+  res.json(filteredReservations);
+});
+
+app.post('/api/reserve/:timeId', function (req, res) {
+  let timeId = req.params.timeId;
+
+  // Placeholder for your reservation logic
+  console.log(`Received request to reserve time ID: ${timeId}`);
+
+  // Sending a response back to the client
+  res.json({ message: `Reservation request for time ID ${timeId} received` });
+});
+
+
 app.get('/api/venues', function (req, res) {
   res.type('json');
 
@@ -129,6 +232,33 @@ app.get('/api/venues/:venueId', function (req, res) {
   res.send(response);
 
 });
+
+app.get('/api/venue_reservations/:venueId', function (req, res) {
+  let venueId = req.params.venueId;
+
+  // Mock data representing reservations for a venue
+  let reservations = [
+      {
+          "reservationId": "r1",
+          "venueId": venueId,
+          "bandName": "Aodhan and the Programmers",
+          "time": "2023-12-10 19:00"
+      },
+      {
+          "reservationId": "r2",
+          "venueId": venueId,
+          "bandName": "The DOM Element Collective",
+          "time": "2023-12-12 20:00"
+      }
+  ];
+
+  // Filter reservations by the venueId
+  let filteredReservations = reservations.filter(reservation => reservation.venueId === venueId);
+
+  // Sending the filtered list of reservations as JSON response
+  res.json(filteredReservations);
+});
+
 
 app.get('/api/users', function (req, res) {
   res.type('json');
@@ -222,6 +352,65 @@ app.get('/api/users/:userId', function (req, res) {
     `;
   } else {
     res.status(400).send(`{"error": "User with id ${userId} not found" }`);
+    return;
+  }
+
+  res.send(response);
+
+});
+
+app.get('/api/userInfo/:userName', function (req, res) {
+  res.type('json');
+
+  let response = "";
+  let userName = req.params.userName;
+
+  if (userName=="alice") {
+      response = 
+      `
+      {
+        "id": "1",
+        "name": "Alice",
+        "username": "alice",
+        "type": "band",
+        "managerOf": "2"
+      }
+      `;
+  } else if ( userName=="bronson") {
+    response = 
+    `
+    {
+      "id": "2",
+      "name": "Bronson",
+      "username": "bronson",
+      "type": "band",
+      "managerOf": "1"
+    }
+    `;
+  } else if ( userName=="clarice") {
+    response = 
+    `
+    {
+      "id": "3",
+      "name": "Clarice",
+      "username": "clarice",
+      "type": "venue",
+      "managerOf": "2"
+    }
+    `;
+  } else if ( userName=="davendra") {
+    response = 
+    `
+    {
+      "id": "4",
+      "name": "Davendra",
+      "username": "davendra",
+      "type": "venue",
+      "managerOf": "1"
+    }
+    `;
+  } else {
+    res.status(400).send(`{"error": "User with name ${userName} not found" }`);
     return;
   }
 
