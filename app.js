@@ -1,6 +1,8 @@
-const express = require('express');
-//const { loginAsync } = require('./Server/backendManager');
-const cors = require('cors');
+import {loginAsync} from "./Server/backendManager.js"
+import express from 'express';
+import cors from 'cors';
+import { login } from "./Server/dbManager.js";
+
 const app = express();
 const port = 3001;
 
@@ -418,19 +420,10 @@ app.get('/api/userInfo/:userName', function (req, res) {
 
 });
 
-app.get('/login/:username/:password', async function (req, res) {
+app.get('/login', async function (req, res) {
   let user = req.params.username;
   let pw = req.params.password;
-
-  let result = await loginAsync(user, pw)
-                      .then(statusCheck)
-                      .then(resp => resp.json())
-                      .catch(res.status(400).send('Error while logging in'));
-  
-  if (result.code!==undefined) {
-    res.type('json');
-    res.send(result);
-  }
+  const answer = await login('one', 'one');
 });
 
  /**
