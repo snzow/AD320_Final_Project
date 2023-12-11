@@ -1,4 +1,4 @@
-import {login} from './dbManager.js';
+import {getUserByUsername, login} from './dbManager.js';
 
 /**
  *  takes a reservation object containing a venueName, bandName, and Datetime. Attempts to create a reservation in the database.
@@ -102,6 +102,11 @@ export async function loginAsync(username, password) {
     code: 200,
     value: result,
   };
+}
+
+export async function getUserInfoByUsernameAsync(username){
+    const response = await getUserByUsername(username);
+    return response;
 }
 // module.exports = {
 //   loginAsync,

@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {}
 
-async function makeReservationDb(reservation) {
+export async function makeReservationDb(reservation) {
   const venue = await prisma.venue.findFirst({
     where: {
       venueName: reservation.venueName,
@@ -41,10 +41,10 @@ async function makeReservationDb(reservation) {
   return result;
 }
 
-async function getReservationsByVenue(venueName) {
+export async function getReservationsByVenue(venueName) {
   const venue = await prisma.venue.findFirst({
     where: {
-      venueName: venueName
+      venueName: venueName,
     },
   });
   if (!venue) {
@@ -53,16 +53,16 @@ async function getReservationsByVenue(venueName) {
 
   const reservations = await prisma.reservation.findMany({
     where: {
-      venueId: venue.id
-    }
+      venueId: venue.id,
+    },
   });
   return reservations;
 }
 
-async function getReservationsByBand(bandName) {
+export async function getReservationsByBand(bandName) {
   const band = await prisma.band.findFirst({
     where: {
-      bandName: bandName
+      bandName: bandName,
     },
   });
   if (!band) {
@@ -71,59 +71,71 @@ async function getReservationsByBand(bandName) {
 
   const reservations = await prisma.reservation.findMany({
     where: {
-      bandId: band.id
-    }
+      bandId: band.id,
+    },
   });
   return reservations;
 }
 
-async function getReservations() {
+export async function getReservations() {
   return await prisma.reservation.findMany();
 }
 
-async function createUser(username, password) {
+export async function createUser(username, password) {
   const user = await prisma.user.findUnique({
     where: {
       username: username,
-    }
-  })
+    },
+  });
   if (user) {
-    return 'Username Taken'
+    return 'Username Taken';
   }
   const result = await prisma.user.create({
     data: {
       username: username,
       password: password,
-    }
-  })
+    },
+  });
   return result;
 }
 
 export async function login(username, password) {
-  console.log('here');
-  try{
+  try {
     const user = await prisma.user.findUnique({
       where: {
-        username: username
-      }
-    })
-    console.log('then');
+        username: username,
+      },
+    });
+
+    main();
     if (!user) {
       console.log('no user');
       return 'Invalid Username';
     }
     if (user.password != password) {
       console.log('bad password');
-      return 'Invalid Password'
+      return 'Invalid Password';
     }
     console.log('here');
     return user;
-  }
-  catch{
+  } catch {
     console.log('error caught');
-    return 'Invalid Username'
+    return 'Invalid Username';
   }
- 
+}
+
+export async function getUserByUsername(username) {
+  const user = await prisma.user.findFirst({
+    where: {
+      username: username,
+    },
+  });
+  main();
+  return user;
+}
+
+export async function init() {
+  
 }
 
 main()

@@ -1,4 +1,4 @@
-import {loginAsync} from "./Server/backendManager.js"
+import {getUserInfoByUsernameAsync, loginAsync} from "./Server/backendManager.js"
 import express from 'express';
 import cors from 'cors';
 import { login } from "./Server/dbManager.js";
@@ -361,12 +361,26 @@ app.get('/api/users/:userId', function (req, res) {
 
 });
 
-app.get('/api/userInfo/:userName', function (req, res) {
-  res.type('json');
-
-  let response = "";
+app.get('/api/userInfo/:userName', async function (req, res) {
+  console.log('in api');
   let userName = req.params.userName;
+  try{
+    const response = await getUserInfoByUsernameAsync(userName);
+    
+    console.log(response);
+    
+    if(!response){
+      res.status(400).send('no user found');
+      return;
+    }
+    res.status(200).send(response);
 
+  }
+  catch(error){
+    res.status(500).send(error);
+  }
+
+  /*
   if (userName=="alice") {
       response = 
       `
@@ -415,8 +429,7 @@ app.get('/api/userInfo/:userName', function (req, res) {
     res.status(400).send(`{"error": "User with name ${userName} not found" }`);
     return;
   }
-
-  res.send(response);
+*/
 
 });
 

@@ -7,8 +7,7 @@
 
 "use strict";
 
-const { userInfo } = require("os");
-
+import { userInfo } from "os";
 (function () {
 
     const API_ROOT = "http://localhost:3001";
