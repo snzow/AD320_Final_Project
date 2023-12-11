@@ -434,9 +434,16 @@ app.get('/api/userInfo/:userName', async function (req, res) {
 });
 
 app.get('/login', async function (req, res) {
-  let user = req.params.username;
-  let pw = req.params.password;
-  const answer = await loginAsync('one', 'one');
+  let user = req.body.username;
+  let pw = req.body.password;
+  try {
+    const answer = await loginAsync(user, pw);
+    res.status(answer.code).send(answer.value);
+  }
+  catch (error) {
+    res.status(500).send(error);
+  }
+  
 });
 
  /**
