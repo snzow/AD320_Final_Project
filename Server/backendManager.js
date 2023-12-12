@@ -1,4 +1,4 @@
-import {createReservation, getUserByUsername, login} from './dbManager.js';
+import {makeReservationDb, createReservation, getUserByUsername, login, getBands, getVenues, getReservationsByBand, getReservationsByVenue, getReservations, createUser, createBandAvailability} from './dbManager.js';
 
 /**
  *  takes a reservation object containing a venueName, bandName, and Datetime. Attempts to create a reservation in the database.
@@ -47,6 +47,15 @@ export async function getReservationsByVenueAsync(venue) {
  */
 export async function getReservationsByBandAsync(band) {
   const result = await getReservationsByBand(band);
+  if (result == 'No Band') {
+    return 'No Band';
+  } else {
+    return result;
+  }
+}
+
+export async function getAvailabilitiesByBandAsync(band) {
+  const result = await getReservationsByBand(band, true);
   if (result == 'No Band') {
     return 'No Band';
   } else {
@@ -112,7 +121,7 @@ export async function getVenuesAsync(){
   return await getVenues();
 }
 
-export async function createBandAvailability(bandId, time){
+export async function createBandAvailabilityAsync(bandId, time){
   return await createBandAvailability(bandId, time);
 }
 
@@ -139,6 +148,8 @@ export async function getUserInfoByUsernameAsync(username){
 //   createAccountAsync,
 //   getReservationsAsync,
 //   getReservationsByBandAsync,
+//   getAvailabilitiesByBandAsync,
 //   getReservationsByVenueAsync,
 //   makeReservationAsync,
+//   createBandAvailabilityAsync,
 // }

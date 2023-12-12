@@ -1,11 +1,15 @@
-import {getUserInfoByUsernameAsync, loginAsync} from "./Server/backendManager.js"
+import {createBandAvailabilityAsync, getAvailabilitiesByBandAsync, getBandsAsync, getUserInfoByUsernameAsync, loginAsync} from "./Server/backendManager.js"
 import express from 'express';
 import cors from 'cors';
 import { login } from "./Server/dbManager.js";
+import { checkPrime } from "crypto";
+import multer from "multer";
 
 const app = express();
 const port = 3001;
 
+app.use(express.urlencoded({ extended: true}));
+app.use(multer().none());
 app.use(express.json());
 app.use(cors());
 
@@ -17,11 +21,12 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-app.get('/api/bands', function (req, res) {
+app.get('/api/bands', async function (req, res) {
   res.type('json');
 
-  let response = 
-  `
+  let response = await getBandsAsync()
+
+/*  `
   [ {
       "id": "1",
       "name": "Aodhan and the Programmers",
@@ -36,7 +41,8 @@ app.get('/api/bands', function (req, res) {
     }
   ]
   `
-
+*/
+  //console.log(response);
   res.send(response);
 });
 
@@ -75,11 +81,31 @@ app.get('/api/bands/:bandId', function (req, res) {
 
 });
 
-app.get('/api/allBandAvailabilities', function (req, res) {
+app.get('/api/allBandAvailabilities', async function (req, res) {
   res.type('json');
 
-  let allBandAvailabilities = [
-    {
+  let allBandAvailabilities = [];
+  let bands = await getBandsAsync();
+  let availabilities;
+  let bandAv = {};
+  let time = {};
+
+  for (let band of bands) {
+    availabilities = await getAvailabilitiesByBandAsync(band.bandName);
+    bandAv['id'] = band.id;
+    bandAv['name'] = band.bandName;
+    bandAv['availableTimes'] = [];
+    if (availabilities!=="No band") {
+      for (let av of availabilities) {
+        time = {};
+        time['timeId'] = av.id;
+        time['timeString'] = av.time;
+        bandAv['availableTimes'].push(time);
+      }
+    }
+    allBandAvailabilities.push(bandAv);
+  }
+/*    {
         "id": "1",
         "name": "Aodhan and the Programmers",
         "description": "Nerdcore house beats",
@@ -100,8 +126,19 @@ app.get('/api/allBandAvailabilities', function (req, res) {
       ]
     },
 ];
+*/
 
   res.send(JSON.stringify(allBandAvailabilities));
+});
+
+app.post('/api/band/addAvailability', async function (req, res) {
+  let band = req.body.bandName;
+  let timeString = req.body.timeString;
+
+  console.log(band);
+  console.log(timeString);
+
+  await createBandAvailabilityAsync(band, timeString);
 });
 
 app.get('/api/bandAvailability/:bandId', function (req, res) {
@@ -448,6 +485,45 @@ app.get('/login', async function (req, res) {
   }
   
 });
+
+app.post('/api/users/newUser'), async function (req, res) {
+  res.type('text');
+
+  let userId;
+  let user = req.body.username;
+  let pw = req.body.password;
+  let type = req.body.type;
+  let entity = req.body.entityName;
+  let entityDesc = req.body.entityDesc;
+
+  if (!user||!pw||!type||!entity) {
+    res.status(400).send("Missing required info!");
+    return;
+  }
+
+  let result = await createAccountAsync(user, pw)
+                      .then(statusCheck)
+                      .then(resp => resp.json())
+                      .catch(res.status(400).send);
+  
+  if (type==="band") {
+    result = await createBandAsync(username, entity)
+                    .then(statusCheck)
+                    .then(resp => resp.json())
+                    .catch(res.status(400).send);             
+  } else if (type==="venue") {
+    result = await createVenueAsync(username, entity)
+                    .then(statusCheck)
+                    .then(resp => resp.json())
+                    .catch(res.status(400).send);             
+  } else {
+    res.status(400).send("Invalid entity type specified!");
+  }
+
+  res.status(200).send("User successfully created!");
+}
+
+
 
 // POST endpoint for account creation
 app.post('/api/createAccount', (req, res) => {
