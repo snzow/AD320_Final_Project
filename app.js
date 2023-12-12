@@ -476,7 +476,7 @@ app.get('/api/userInfo/:userName', async function (req, res) {
   */
 });
 
-app.get('/login', async function (req, res) {
+app.post('/api/login', async function (req, res) {
   let user = req.body.username;
   let pw = req.body.password;
   try {
