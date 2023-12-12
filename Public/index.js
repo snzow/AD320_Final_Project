@@ -15,6 +15,9 @@ import { userInfo } from "os";
 
     window.addEventListener("load", init);
 
+    /**
+     * Initializes the application. Sets up event listeners and pre-fills username if available.
+     */
     function init() {
         prefillUsername();
         fetchUserTypeAndDisplay();
@@ -30,6 +33,10 @@ import { userInfo } from "os";
         }
     };
 
+    /**
+     * Updates the display based on the user type (band or venue).
+     * Shows or hides specific sections of the page accordingly.
+     */
     function updateDisplayBasedOnUserType() {
         const userType = localStorage.getItem('userType');
         const loginLogoutButton = document.getElementById('login-logout-button');
@@ -70,6 +77,10 @@ import { userInfo } from "os";
         }
     }
 
+    /**
+     * Fetches the user type from the server and updates the display.
+     * If the user is already stored in localStorage, it uses that information.
+     */
     function fetchUserTypeAndDisplay() {
         const username = localStorage.getItem('username');
         if (username) {
@@ -89,6 +100,11 @@ import { userInfo } from "os";
         }
     }
 
+    /**
+     * Handles the login and logout actions.
+     * Clears local storage and updates display on logout, redirects to login page if not logged in.
+     * @param {Event} event - The event logout.
+     */
     function handleLoginLogout(event) {
         event.preventDefault();
         const userType = localStorage.getItem('userType');
@@ -104,6 +120,10 @@ import { userInfo } from "os";
         }
     }
 
+    /**
+    * Handles the login process. Checks credentials and updates local storage and UI upon success.
+    * @param {Event} event - The event login
+    */
     function handleLogin(event) {
         event.preventDefault();
         const username = document.getElementById('username').value;
@@ -132,6 +152,9 @@ import { userInfo } from "os";
         }
     }
 
+    /**
+     * Pre-fills the username field if a username is stored in local storage.
+     */
     function prefillUsername() {
         const savedUsername = localStorage.getItem('username');
         const usernameInput = document.getElementById('username');
@@ -141,6 +164,10 @@ import { userInfo } from "os";
         }
     }
 
+    /**
+     * Fetches and displays the details of a specific band.
+     * @param {string} bandId - The unique identifier of the band.
+     */
     function showBandDetails(bandId) {
         fetch(API_ROOT + `/api/bands/${bandId}`)
             .then(response => response.json())
