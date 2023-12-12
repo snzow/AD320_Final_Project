@@ -104,6 +104,16 @@ export async function loginAsync(username, password) {
   };
 }
 
+export async function createVenueAsync(username, venueName = null){
+  const venue = await createVenue(username, venueName);
+  return venue;
+}
+
+export async function createBandAsync(username, bandName = null){
+  const band = await createBand(username, bandName);
+  return band;
+}
+
 export async function getUserInfoByUsernameAsync(username){
     const response = await getUserByUsername(username);
     return response;

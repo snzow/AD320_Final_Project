@@ -134,9 +134,51 @@ export async function getUserByUsername(username) {
   return user;
 }
 
-export async function init() {
-  
+export async function createVenue(venueName, username = null) {
+  if (username) {
+    const user = getUserByUsername(username);
+    if (!user) {
+      return 'user not found';
+    }
+    const venue = await prisma.venue.create({
+      data: {
+        venueName: venueName,
+        userId: user.id,
+      },
+    });
+    return venue;
+  }
+  const venue = await prisma.venue.create({
+    data: {
+      venueName: venueName,
+    },
+  });
+  return venue;
 }
+
+export async function createBand(bandName, username = null) {
+  if (username) {
+    const user = getUserByUsername(username);
+    if (!user) {
+      return 'user not found';
+    }
+    const band = await prisma.band.create({
+      data: {
+        bandName: bandName,
+        userId: user.id,
+      },
+    });
+    return band;
+  }
+  const band = await prisma.band.create({
+    data: {
+      bandName: bandName,
+    },
+  });
+  return band;
+}
+
+export async function init() {}
 
 main()
   .then(async () => {
