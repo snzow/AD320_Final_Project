@@ -39,6 +39,7 @@ import { userInfo } from "os";
      */
     function updateDisplayBasedOnUserType() {
         const userType = localStorage.getItem('userType');
+        const userName = localStorage.getItem('username');
         const loginLogoutButton = document.getElementById('login-logout-button');
 
         const scheduleSection = document.getElementById('schedule');
@@ -124,33 +125,41 @@ import { userInfo } from "os";
     * Handles the login process. Checks credentials and updates local storage and UI upon success.
     * @param {Event} event - The event login
     */
-    function handleLogin(event) {
+    async function handleLogin(event) {
         event.preventDefault();
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
+        let body = {"username" : username, "password" : password};
+
+        const loginResult = await fetch(API_ROOT + '/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "username": username,
+                "password": password
+            }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                // If response is not ok, throw an error
+                throw new Error(response.message);
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Login error:', error);
+        });
+
+        localStorage.setItem("username", loginResult.username);
+        localStorage.setItem("userType", loginResult.type);
+    
         // Test if the username and password match the specific credentials. alice for band, clarice for venu
-        if ((username === 'alice' && password === '1234')|| (username === 'clarice' && password === '1234')) {
-            // Perform the login actions
-            localStorage.setItem('username', username);
-            var url = API_ROOT + '/api/userInfo/' + username
-            
-            fetch(url)
-            .then(response => response.json())
-            .then(userInfo => {
-                localStorage.setItem('userType', userInfo.type);
-            })
-            .catch(error => {
-                console.error('Error fetching userInfo:', error);
-            });
-            
-            // Redirect to main page or show success message
             window.location.href = 'index.html'; // Redirect to the main page after login
-        } else {
-            // Handle login failure
-            alert('Login failed. Please try again.');
-        }
     }
+
 
     /**
      * Pre-fills the username field if a username is stored in local storage.

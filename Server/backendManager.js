@@ -152,4 +152,5 @@ export async function getUserInfoByUsernameAsync(username){
 //   getReservationsByVenueAsync,
 //   makeReservationAsync,
 //   createBandAvailabilityAsync,
+//   getUserInfoByUsernameAsync,
 // }

@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function main() {}
 
-export async function makeReservationDb(reservation) {
+export async function makeReservationDb(timeId, venueName) {
   const venue = await prisma.venue.findFirst({
     where: {
       venueName: reservation.venueName,
@@ -168,6 +168,16 @@ export async function getUserByUsername(username) {
     where: {
       username: username,
     },
+    include: {
+      OR: [
+    {
+      band: bandName,
+    },
+    {
+      venue: venueName,
+    },
+    ]
+  }
   });
   main();
   return user;
