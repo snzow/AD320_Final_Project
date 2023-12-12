@@ -16,20 +16,19 @@ import { userInfo } from "os";
     window.addEventListener("load", init);
 
     function init() {
-            prefillUsername();
-            fetchUserTypeAndDisplay();
+        prefillUsername();
+        fetchUserTypeAndDisplay();
 
-            const loginLogoutButton = document.getElementById('login-logout-button');
-            if (loginLogoutButton) {
-                loginLogoutButton.addEventListener('click', handleLoginLogout);
-            }
-            
-            const loginForm = document.getElementById('login-form');
-            if (loginForm) {
-                loginForm.addEventListener('submit', handleLogin);
-            }
-            
-        };
+        const loginLogoutButton = document.getElementById('login-logout-button');
+        if (loginLogoutButton) {
+            loginLogoutButton.addEventListener('click', handleLoginLogout);
+        }
+        
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', handleLogin);
+        }
+    };
 
     function updateDisplayBasedOnUserType() {
         const userType = localStorage.getItem('userType');
@@ -96,7 +95,7 @@ import { userInfo } from "os";
         
         if (userType === 'band' || userType === 'venue') {
             // User is logged in, so log them out
-            localStorage.removeItem('userType');
+            localStorage.clear();
             updateDisplayBasedOnUserType(); // Update display after logout
 
         } else {
