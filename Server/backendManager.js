@@ -1,4 +1,4 @@
-import {getUserByUsername, login} from './dbManager.js';
+import {createReservation, getUserByUsername, login} from './dbManager.js';
 
 /**
  *  takes a reservation object containing a venueName, bandName, and Datetime. Attempts to create a reservation in the database.
@@ -102,6 +102,14 @@ export async function loginAsync(username, password) {
     code: 200,
     value: result,
   };
+}
+
+export async function createBandAvailability(bandId, time){
+  return await createBandAvailability(bandId, time);
+}
+
+export async function createReservationAsync(bandId, venueId, time){
+  return await createReservation(bandId,venueId, time);
 }
 
 export async function createVenueAsync(username, venueName = null){

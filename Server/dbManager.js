@@ -41,10 +41,11 @@ export async function makeReservationDb(reservation) {
   return result;
 }
 
-export async function getReservationsByVenue(venueName) {
+export async function getReservationsByVenue(venueName, available = false) {
   const venue = await prisma.venue.findFirst({
     where: {
       venueName: venueName,
+      reserved: !available,
     },
   });
   if (!venue) {
@@ -59,10 +60,11 @@ export async function getReservationsByVenue(venueName) {
   return reservations;
 }
 
-export async function getReservationsByBand(bandName) {
+export async function getReservationsByBand(bandName, available = false) {
   const band = await prisma.band.findFirst({
     where: {
       bandName: bandName,
+      reserved: !available,
     },
   });
   if (!band) {
@@ -72,13 +74,50 @@ export async function getReservationsByBand(bandName) {
   const reservations = await prisma.reservation.findMany({
     where: {
       bandId: band.id,
+      reserved: true,
     },
   });
   return reservations;
 }
 
-export async function getReservations() {
-  return await prisma.reservation.findMany();
+export async function getReservations(available = false) {
+  return await prisma.reservation.findMany({
+    where: {
+      reserved: !available,
+    },
+  });
+}
+
+export async function createBandAvailability(bandId, time) {
+  const reservation = await prisma.reservation.create({
+    data: {
+      bandId: bandId,
+      time: time,
+    },
+  });
+}
+
+export async function createReservation(bandId, venueId, time) {
+  const reservation = await prisma.reservation.findFirst({
+    where: {
+      bandId: bandId,
+      time: time,
+    },
+  });
+  if ((reservation.reserved = false)) {
+    const newReservation = await prisma.reservation.update({
+      where: {
+        id: reservation.id,
+      },
+      update: {
+        reserved: true,
+        venueId : venueId,
+      },
+    });
+    return newReservation;
+  } else {
+    return 'time slot not available';
+  }
 }
 
 export async function createUser(username, password) {
@@ -106,7 +145,6 @@ export async function login(username, password) {
         username: username,
       },
     });
-
     main();
     if (!user) {
       console.log('no user');
