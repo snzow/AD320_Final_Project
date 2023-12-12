@@ -12,7 +12,7 @@ datasource db {
 
 model Reservation {
   id Int @id @default(autoincrement())
-  time DateTime
+  time String
   venue Venue? @relation (fields : [venueId], references: [id])
   venueId Int?
   band Band @relation(fields: [bandId], references: [id])

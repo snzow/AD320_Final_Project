@@ -96,3 +96,4 @@ Thumbs.db
 # distribution folder, this will be dynamically compiled
 Public/dist
 dist
+.vscode/settings.json
