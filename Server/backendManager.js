@@ -104,6 +104,14 @@ export async function loginAsync(username, password) {
   };
 }
 
+export async function getBandsAsync(){
+  return await getBands();
+}
+
+export async function getVenuesAsync(){
+  return await getVenues();
+}
+
 export async function createBandAvailability(bandId, time){
   return await createBandAvailability(bandId, time);
 }

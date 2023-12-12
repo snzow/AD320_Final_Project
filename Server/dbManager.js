@@ -172,6 +172,16 @@ export async function getUserByUsername(username) {
   return user;
 }
 
+export async function getBands(){
+  const bands = await prisma.bands.findMany();
+  return bands;
+}
+
+export async function getVenues(){
+  const venues = await prisma.bands.findMany();
+  return venues;
+}
+
 export async function createVenue(venueName, username = null) {
   if (username) {
     const user = getUserByUsername(username);
