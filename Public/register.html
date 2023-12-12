@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <header>
+        <h1>Band Reservation Platform</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="#register">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="registration-container">
+            <h2>Register</h2>
+            <form id="registration-form" class="registration-form">
+                <div class="form-field">
+                    <label for="reg-username">Username:</label>
+                    <input type="text" id="reg-username" name="username" required autocomplete="username">
+                </div>
+                <div class="form-field">
+                    <label for="reg-password">Password:</label>
+                    <input type="password" id="reg-password" name="password" required autocomplete="new-password">
+                </div>
+                <div class="form-field">
+                    <label for="userType">User Type:</label>
+                    <select id="userType" name="userType">
+                        <option value="band">Band</option>
+                        <option value="venue">Venue</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="bandOrVenueName">Band or Venue Name:</label>
+                    <input type="text" id="bandOrVenueName" name="bandOrVenueName" required>
+                </div>
+                <div class="form-field">
+                    <button id="register-button" type="submit">Register</button>
+                </div>
+
+                <div id="form-message"></div>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2023 Band Reservation Platform</p>
+    </footer>
+    <script src="register.js"></script>
+</body>
+</html>

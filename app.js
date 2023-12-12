@@ -6,6 +6,7 @@ import { login } from "./Server/dbManager.js";
 const app = express();
 const port = 3001;
 
+app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
@@ -364,6 +365,7 @@ app.get('/api/users/:userId', function (req, res) {
 app.get('/api/userInfo/:userName', async function (req, res) {
   console.log('in api');
   let userName = req.params.userName;
+  
   try{
     const response = await getUserInfoByUsernameAsync(userName);
     
@@ -379,8 +381,9 @@ app.get('/api/userInfo/:userName', async function (req, res) {
   catch(error){
     res.status(500).send(error);
   }
-
+  
   /*
+  let response;
   if (userName=="alice") {
       response = 
       `
@@ -429,8 +432,8 @@ app.get('/api/userInfo/:userName', async function (req, res) {
     res.status(400).send(`{"error": "User with name ${userName} not found" }`);
     return;
   }
-*/
-
+  res.status(200).send(response);
+  */
 });
 
 app.get('/login', async function (req, res) {
@@ -444,6 +447,24 @@ app.get('/login', async function (req, res) {
     res.status(500).send(error);
   }
   
+});
+
+// POST endpoint for account creation
+app.post('/api/createAccount', (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    res.status(400).json({ message: "Username or password is missing" });
+    return;
+  }
+
+  if (username === "failure") {
+    res.status(400).json({ message: `Account creation failed for user ${username}` });
+  } else {
+    // Here, you would typically add logic to create an account
+    // For now, we're just sending a success response
+    res.status(201).json({ message: `Account created successfully for user ${username}` });
+  }
 });
 
  /**

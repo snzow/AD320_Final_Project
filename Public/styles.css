@@ -124,8 +124,10 @@ section {
 }
 
 .reservation-form button,
-.login-form button {
+.login-form button,
+.form-button { 
     padding: 10px;
+    width: 100%; /* Set a fixed width */
     background-color: #333;
     color: white;
     border: none;
@@ -134,8 +136,13 @@ section {
     transition: background-color 0.3s ease;
 }
 
+#submit-button {
+    margin-right: 10px; /* Adjust the value as needed */
+}
+
 .reservation-form button:hover,
-.login-form button:hover {
+.login-form button:hover,
+.form-button:hover {
     background-color: #444;
 }
 

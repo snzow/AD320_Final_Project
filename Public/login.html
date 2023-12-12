@@ -11,18 +11,21 @@
         <h1>Band Reservation Platform</h1>
         <nav>
             <ul>
-              <li><a href="index.html">Home</a></li>
-              <li><a href="#login">Login</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#login">Login</a></li>
+                <li><a href="register.html">Register</a></li>
             </ul>
         </nav>
     </header>
     <div class="login-container">
-        <h1>Login</h1>
+        <h1 id="form-title">Login</h1>
         <form id="login-form" class="login-form">
-        Username: <input type="text" id="username" name="username" autocomplete="username"><br>
-        Password: <input type="password" id="password" name="password" autocomplete="current-password"><br>
-        <button type="submit">Login</button>
-</form>
+            Username: <input type="text" id="username" name="username" autocomplete="username"><br>
+            Password: <input type="password" id="password" name="password" autocomplete="current-password"><br>
+            <button type="submit" id="submit-button">Login</button>
+        </form>
+        <p id="form-message"></p>
+    </div>
     <script src="index.js"></script>
 </body>
 </html>
