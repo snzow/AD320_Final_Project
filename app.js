@@ -365,7 +365,7 @@ app.get('/api/users/:userId', function (req, res) {
 app.get('/api/userInfo/:userName', async function (req, res) {
   console.log('in api');
   let userName = req.params.userName;
-  /*
+  
   try{
     const response = await getUserInfoByUsernameAsync(userName);
     
@@ -381,8 +381,8 @@ app.get('/api/userInfo/:userName', async function (req, res) {
   catch(error){
     res.status(500).send(error);
   }
-  */
-
+  
+  /*
   let response;
   if (userName=="alice") {
       response = 
@@ -433,7 +433,7 @@ app.get('/api/userInfo/:userName', async function (req, res) {
     return;
   }
   res.status(200).send(response);
-
+  */
 });
 
 app.get('/login', async function (req, res) {
@@ -451,8 +451,6 @@ app.get('/login', async function (req, res) {
 
 // POST endpoint for account creation
 app.post('/api/createAccount', (req, res) => {
-  console.log(req.body); // For debugging, to see what data is received
-
   const { username, password } = req.body;
 
   if (!username || !password) {
