@@ -9,7 +9,7 @@
 
     const API_ROOT = "http://localhost:3001";
 
-    /**
+/**
      * Initializes the application on DOMContentLoaded.
      * Fetches available bands and current venue reservations.
      */
@@ -20,7 +20,7 @@
         fetchVenueReservations();
     });
 
-    document.getElementById('bands-display').addEventListener('click', function(event) {
+document.getElementById('bands-display').addEventListener('click', function(event) {
         // Check if the clicked element is a reserve button
         if (event.target && event.target.nodeName === 'BUTTON') {
             const timeId = event.target.getAttribute('data-time-id');
@@ -49,8 +49,8 @@
             return Promise.reject('No username found in localStorage');
         }
     }
-
-    /**
+    
+/**
      * Fetches and displays the current reservations for the venue.
      */
     async function fetchVenueReservations() {
@@ -83,15 +83,22 @@
         }
     }
 
-    /**
-     * Handles the submission of the reservation form.
-     */
-    function handleReservation(timeId, bandId) {
+    function handleReservation(event) {
+        event.preventDefault();
+        
+        const date = document.getElementById('date').value;
+        const startTime = document.getElementById('start-time').value;
+        const endTime = document.getElementById('end-time').value;
+        const bandName = document.getElementById('bandName').value;
+        
         // Constructing the reservation data object
         const reservationData = {
-            bandId: bandId,
-            timeId: timeId
+            date: date,
+            startTime: startTime,
+            endTime: endTime,
+            bandName: bandName
         };
+
         // API call to reserve a band
         fetch('/api/reserve', {
             method: 'POST',
@@ -117,11 +124,11 @@
         });
     }
 
-    /**
+/**
      * Fetches and displays the list of available bands.
      */
     function fetchAvailableBands() {
-        fetch('http://localhost:3001/api/allBandAvailabilities')
+        fetch(API_ROOT + '/api/allBandAvailabilities')
             .then(response => response.json())
             .then(bands => {
                 displayAvailableBands(bands);
@@ -131,7 +138,7 @@
             });
     }
     
-    /**
+/**
      * Displays the available bands in the UI.
      * @param {Array} bands - Array of band objects with their availability.
      */
@@ -152,5 +159,5 @@
         document.getElementById('bands-display').innerHTML = bandsList;
     }
     
-
+    
 })();
