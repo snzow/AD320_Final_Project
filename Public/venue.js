@@ -9,7 +9,7 @@
 
     const API_ROOT = "http://localhost:3001";
 
-/**
+    /**
      * Initializes the application on DOMContentLoaded.
      * Fetches available bands and current venue reservations.
      */
@@ -20,12 +20,16 @@
         fetchVenueReservations();
     });
 
-document.getElementById('bands-display').addEventListener('click', function(event) {
-        // Check if the clicked element is a reserve button
+    document.getElementById('bands-display').addEventListener('click', function(event) {
         if (event.target && event.target.nodeName === 'BUTTON') {
-            const timeId = event.target.getAttribute('data-time-id');
-            const bandId = event.target.getAttribute('data-band-id');
-            handleReservation(timeId, bandId);
+            if (event.target.classList.contains('details-btn')) {
+                const detailsId = event.target.getAttribute('data-details-id');
+                toggleDetails(detailsId);
+            } else if (event.target.hasAttribute('data-time-id')) {
+                const timeId = event.target.getAttribute('data-time-id');
+                const bandId = event.target.getAttribute('data-band-id');
+                handleReservation(timeId, bandId);
+            }
         }
     });
 
@@ -50,7 +54,7 @@ document.getElementById('bands-display').addEventListener('click', function(even
         }
     }
     
-/**
+    /**
      * Fetches and displays the current reservations for the venue.
      */
     async function fetchVenueReservations() {
@@ -131,6 +135,7 @@ document.getElementById('bands-display').addEventListener('click', function(even
         fetch(API_ROOT + '/api/allBandAvailabilities')
             .then(response => response.json())
             .then(bands => {
+                console.log(bands);
                 displayAvailableBands(bands);
             })
             .catch(error => {
@@ -138,26 +143,40 @@ document.getElementById('bands-display').addEventListener('click', function(even
             });
     }
     
-/**
+    function toggleDetails(detailsId) {
+        const details = document.getElementById(detailsId);
+        details.style.display = details.style.display === 'none' ? 'block' : 'none';
+    }
+
+    /**
      * Displays the available bands in the UI.
      * @param {Array} bands - Array of band objects with their availability.
      */
-    function displayAvailableBands(bands) {
-        let bandsList = '<ul>';
-        for (let band of bands) {
-            bandsList += `<li>${band.name}<br>Available Times: <ul>`;
-            for (let time of band.availableTimes) {
-                bandsList += `
+function displayAvailableBands(bands) {
+    let bandsList = '<ul>';
+    console.log(bands);
+    for (let band of bands) {
+        console.log(band);
+        bandsList += `
+            <li>
+                ${band.name}
+                <button class="details-btn" data-details-id="details-${band.id}">View Details</button>
+                <div id="details-${band.id}" class="band-details" style="display:none;">
+                    Available Times: <ul>`;
+        for (let time of band.availableTimes) {
+            bandsList += `
                     <li>
                         ${time.timeString} 
                         <button data-time-id="${time.timeId}" data-band-id="${band.id}">Reserve</button>
                     </li>`;
-            }
-            bandsList += `</ul></li>`;
         }
-        bandsList += '</ul>';
-        document.getElementById('bands-display').innerHTML = bandsList;
+        bandsList += `</ul>
+                </div>
+            </li>`;
     }
+    bandsList += '</ul>';
+    document.getElementById('bands-display').innerHTML = bandsList;
+}
     
     
 })();
