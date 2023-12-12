@@ -1,7 +1,18 @@
+/**
+ * Name: Team Crimson Kings
+ * Date: December 9, 2023
+ * This venue.js file implements the venue interface for a band reservation project.
+ * It allows a venue to reserve a band and see their current reservations.
+ **/
+
 (function () {
 
     const API_ROOT = "http://localhost:3001";
 
+    /**
+     * Initializes the application on DOMContentLoaded.
+     * Fetches available bands and current venue reservations.
+     */
     document.addEventListener('DOMContentLoaded', () => {
         // Fetch bands and their available time slots
         fetchAvailableBands();
@@ -9,6 +20,19 @@
         fetchVenueReservations();
     });
 
+    document.getElementById('bands-display').addEventListener('click', function(event) {
+        // Check if the clicked element is a reserve button
+        if (event.target && event.target.nodeName === 'BUTTON') {
+            const timeId = event.target.getAttribute('data-time-id');
+            const bandId = event.target.getAttribute('data-band-id');
+            handleReservation(timeId, bandId);
+        }
+    });
+
+    /**
+     * Fetches the venue ID associated with the current user.
+     * @returns {Promise<string>} A promise that resolves with the venue ID.
+     */
     function fetchUserVenueId() {
         const username = localStorage.getItem('username');
         if (username) {
@@ -25,7 +49,10 @@
             return Promise.reject('No username found in localStorage');
         }
     }
-    
+
+    /**
+     * Fetches and displays the current reservations for the venue.
+     */
     async function fetchVenueReservations() {
         try {
             const venueId = await fetchUserVenueId();
@@ -56,22 +83,15 @@
         }
     }
 
-    function handleReservation(event) {
-        event.preventDefault();
-        
-        const date = document.getElementById('date').value;
-        const startTime = document.getElementById('start-time').value;
-        const endTime = document.getElementById('end-time').value;
-        const bandName = document.getElementById('bandName').value;
-        
+    /**
+     * Handles the submission of the reservation form.
+     */
+    function handleReservation(timeId, bandId) {
         // Constructing the reservation data object
         const reservationData = {
-            date: date,
-            startTime: startTime,
-            endTime: endTime,
-            bandName: bandName
+            bandId: bandId,
+            timeId: timeId
         };
-
         // API call to reserve a band
         fetch('/api/reserve', {
             method: 'POST',
@@ -97,6 +117,9 @@
         });
     }
 
+    /**
+     * Fetches and displays the list of available bands.
+     */
     function fetchAvailableBands() {
         fetch('http://localhost:3001/api/allBandAvailabilities')
             .then(response => response.json())
@@ -108,6 +131,10 @@
             });
     }
     
+    /**
+     * Displays the available bands in the UI.
+     * @param {Array} bands - Array of band objects with their availability.
+     */
     function displayAvailableBands(bands) {
         let bandsList = '<ul>';
         for (let band of bands) {
@@ -116,7 +143,7 @@
                 bandsList += `
                     <li>
                         ${time.timeString} 
-                        <button onclick="reserveBandTime('${time.timeId}')">Reserve</button>
+                        <button data-time-id="${time.timeId}" data-band-id="${band.id}">Reserve</button>
                     </li>`;
             }
             bandsList += `</ul></li>`;
@@ -125,9 +152,5 @@
         document.getElementById('bands-display').innerHTML = bandsList;
     }
     
-    function reserveBandTime(timeId) {
-        console.log(`Reserving time ID ${timeId}`);
-        // Implement the reservation logic here
-    }
 
 })();

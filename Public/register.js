@@ -1,3 +1,18 @@
+/**
+ * Name: Team Crimson Kings
+ * Date: December 9, 2023
+ * This register.js file implements the guest interface for a band reservation project.
+ * It allows a guess to register an account and become a user.
+ **/
+
+/**
+ * Handles the user registration process.
+ * This function is triggered when the registration form is submitted.
+ * It validates the user input, sends a POST request to the server to create an account,
+ * and handles the server response.
+ *
+ * @param {Event} event - The event object associated with the form submission.
+ */
 function handleRegistration(event) {
     event.preventDefault();
 
