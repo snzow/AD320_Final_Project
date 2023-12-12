@@ -61,11 +61,8 @@ export async function getReservationsByVenue(venueName, available = false) {
 }
 
 export async function getReservationsByBand(bandName, available = false) {
-  const band = await prisma.reservation.findMany({
+  const band = await prisma.band.findUnique({
     where: {
-      reserved: !available,
-    },
-    include: {
       bandName: bandName,
     },
   });
@@ -75,8 +72,10 @@ export async function getReservationsByBand(bandName, available = false) {
 
   const reservations = await prisma.reservation.findMany({
     where: {
-      bandId: band.id,
-      reserved: true,
+      reserved: !available,
+      band: {
+        bandName: bandName,
+      }
     },
   });
   return reservations;
@@ -91,15 +90,10 @@ export async function getReservations(available = false) {
 }
 
 export async function createBandAvailability(bandId, time) {
-  const band = await prisma.band.findFirst({
-    where: {
-      bandName: bandId,
-    },
-  });
   return await prisma.reservation.create({
     data: {
       time: time,
-      band: { connect: band },
+      band: { connect: { bandName: bandId, } },
     },
   });
 }

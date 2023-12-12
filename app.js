@@ -132,6 +132,8 @@ app.get('/api/allBandAvailabilities', async function (req, res) {
 });
 
 app.post('/api/band/addAvailability', async function (req, res) {
+  res.type('text');
+  
   let band = req.body.bandName;
   let timeString = req.body.timeString;
 
@@ -139,6 +141,7 @@ app.post('/api/band/addAvailability', async function (req, res) {
   console.log(timeString);
 
   await createBandAvailabilityAsync(band, timeString);
+  res.status(201).send('Added successfully');
 });
 
 app.get('/api/bandAvailability/:bandId', function (req, res) {
