@@ -5,6 +5,8 @@
  * It allows a band to add available time and to see their booked sschedule.
  **/
 
+import { getUserByUsername } from "../Server/dbManager";
+
 /**
  * Self-invoking function to manage band booking operations.
  * This script manages the functionality related to fetching and displaying
@@ -115,14 +117,29 @@
      *
      * @param {Event} event - The event object associated with the form submission.
      */
-    function availableTimeUpdate(event) {
+    async function availableTimeUpdate(event) {
         event.preventDefault();
         const date = document.getElementById('date').value;
         const startTime = document.getElementById('start-time').value;
         const venue = document.getElementById('venue').value;
 
+        const userInfo = await getUserByUsername(localStorage.getItem("username"));
+
+
         // Add the new booking to the bookingSchedule array
-        bookingSchedule.push(newBooking);
+        // bookingSchedule.push(newBooking);
+
+        await fetch('/api/band/addAvailability', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+
+            body: JSON.stringify({
+                "bandName": userInfo.band.name,
+                "timeString": startTime
+            })
+        })
 
         // Reload the updated schedule
         loadBookingSchedule(bookingSchedule);
