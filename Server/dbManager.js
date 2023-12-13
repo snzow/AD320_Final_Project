@@ -169,16 +169,16 @@ export async function getUserByUsername(username) {
       username: username,
     },
     include: {
-      OR: [
-    {
-      band: bandName,
-    },
-    {
-      venue: venueName,
-    },
-    ]
-  }
-  });
+        band: {
+          select: { bandName: true,
+                    id: true}
+        },
+        venue: {
+          select: { venueName: true,
+                    id: true}
+        }
+      },
+    });
   main();
   return user;
 }

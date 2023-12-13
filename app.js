@@ -1,4 +1,4 @@
-import {createBandAvailabilityAsync, getAvailabilitiesByBandAsync, getBandsAsync, getUserInfoByUsernameAsync, loginAsync} from "./Server/backendManager.js"
+import {createBandAvailabilityAsync, getAvailabilitiesByBandAsync, getBandsAsync, getReservationsByBandAsync, getUserInfoByUsernameAsync, loginAsync} from "./Server/backendManager.js"
 import express from 'express';
 import cors from 'cors';
 import { login } from "./Server/dbManager.js";
@@ -177,10 +177,15 @@ app.get('/api/bandAvailability/:bandId', function (req, res) {
   res.send(JSON.stringify(response));
 });
 
-app.get('/api/band_schedule/:bandId', function (req, res) {
+app.get('/api/band_schedule/:bandId', async function (req, res) {
+  res.type('json');
+
   let bandId = req.params.bandId;
 
+  let reservations = await getReservationsByBandAsync(bandId);
+
   // Mock data representing reservations for a band
+/*
   let reservations = [
       {
           "reservationId": "res1",
@@ -202,9 +207,9 @@ app.get('/api/band_schedule/:bandId', function (req, res) {
 
   // Filter reservations by the bandId
   let filteredReservations = reservations.filter(reservation => reservation.bandId === bandId);
-
+*/
   // Sending the filtered list of reservations as JSON response
-  res.json(filteredReservations);
+  res.send(reservations);
 });
 
 app.post('/api/reserve/:timeId', function (req, res) {

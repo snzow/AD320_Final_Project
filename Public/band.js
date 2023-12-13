@@ -54,7 +54,7 @@
                     return response.json();
                 })
                 .then(user => {
-                    const bandId = user.managerOf;
+                    const bandId = user.band.id;
                     return bandId; 
                 })
                 .catch(error => {
