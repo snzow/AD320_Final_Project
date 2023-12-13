@@ -148,6 +148,11 @@ export async function searchBandsAsync(string){
   const matches = await searchBands(string);
   return matches;
 }
+
+export async function getBandRatingsAsync(bandId){
+  return await getBandRatings(bandId);
+}
+
 // module.exports = {
 //   loginAsync,
 //   createAccountAsync,

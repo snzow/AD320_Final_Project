@@ -75,7 +75,7 @@ export async function getReservationsByBand(bandName, available = false) {
       reserved: !available,
       band: {
         bandName: bandName,
-      }
+      },
     },
   });
   return reservations;
@@ -93,7 +93,7 @@ export async function createBandAvailability(bandId, time) {
   return await prisma.reservation.create({
     data: {
       time: time,
-      band: { connect: { bandName: bandId, } },
+      band: { connect: { bandName: bandId } },
     },
   });
 }
@@ -112,7 +112,7 @@ export async function createReservation(bandId, venueId, time) {
       },
       update: {
         reserved: true,
-        venueId : venueId,
+        venueId: venueId,
       },
     });
     return newReservation;
@@ -134,7 +134,7 @@ export async function createUser(username, password, type, name) {
     data: {
       username: username,
       password: password,
-      type: type
+      type: type,
     },
   });
   return result;
@@ -170,26 +170,24 @@ export async function getUserByUsername(username) {
       username: username,
     },
     include: {
-        band: {
-          select: { bandName: true,
-                    id: true}
-        },
-        venue: {
-          select: { venueName: true,
-                    id: true}
-        }
+      band: {
+        select: { bandName: true, id: true },
       },
-    });
+      venue: {
+        select: { venueName: true, id: true },
+      },
+    },
+  });
   main();
   return user;
 }
 
-export async function getBands(){
+export async function getBands() {
   const bands = await prisma.band.findMany();
   return bands;
 }
 
-export async function getVenues(){
+export async function getVenues() {
   const venues = await prisma.venue.findMany();
   return venues;
 }
@@ -238,10 +236,34 @@ export async function createBand(bandName, username = null) {
   return band;
 }
 
-export async function searchBands(keyword){
+export async function searchBands(keyword) {
   const bands = await getBands();
-  const retVal = bands.filter(item => item.bandName.includes(keyword) || item.gigsPlayed > keyword || item.location.includes(keyword));
+  const retVal = bands.filter(
+    (item) =>
+      item.bandName.includes(keyword) ||
+      item.gigsPlayed > keyword ||
+      item.location.includes(keyword)
+  );
   return retVal;
+}
+
+export async function getBandRatings(bandId) {
+  const ratings = await prisma.rating.findMany({
+    where: {
+      bandId: bandId,
+    },
+  });
+  let sum = 0;
+  let items = ratings.length;
+  if (ratings) {
+    ratings.array.forEach((element) => {
+      sum += element;
+    });
+    return {
+      ratings: ratings,
+      average: Math.round((10 * (sum / items)) / 10),
+    };
+  }
 }
 
 export async function init() {}
