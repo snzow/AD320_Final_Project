@@ -25,6 +25,15 @@
             if (event.target.classList.contains('details-btn')) {
                 const detailsId = event.target.getAttribute('data-details-id');
                 toggleDetails(detailsId);
+            } else if (event.target.classList.contains('rating-btn')) {
+                const bandId = event.target.getAttribute('data-band-id');
+                // Reset previously selected ratings for this band
+                document.querySelectorAll(`.rating-btn[data-band-id="${bandId}"]`).forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                // Highlight the selected rating
+                event.target.classList.add('selected');
+                // handleRating(bandId, rating);
             } else if (event.target.hasAttribute('data-time-id')) {
                 const timeId = event.target.getAttribute('data-time-id');
                 const bandId = event.target.getAttribute('data-band-id');
@@ -165,18 +174,25 @@ function displayAvailableBands(bands) {
                     Available Times: <ul>`;
         for (let time of band.availableTimes) {
             bandsList += `
-                    <li>
-                        ${time.timeString} 
-                        <button data-time-id="${time.timeId}" data-band-id="${band.id}">Reserve</button>
-                    </li>`;
+                <li>
+                    ${time.timeString} 
+                    <button data-time-id="${time.timeId}" data-band-id="${band.id}">Reserve</button>
+                </li>`;
         }
         bandsList += `</ul>
-                </div>
-            </li>`;
+                    </div>
+                    <div class="rating-buttons">Rating: `;
+        for (let i = 1; i <= 10; i++) {
+            bandsList += `<button class="rating-btn" data-band-id="${band.id}" data-rating="${i}">${i}</button>`;
+        }
+        bandsList += `</div></li>`;
     }
     bandsList += '</ul>';
     document.getElementById('bands-display').innerHTML = bandsList;
+
+
 }
+
     
     
 })();
