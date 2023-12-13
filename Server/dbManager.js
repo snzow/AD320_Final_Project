@@ -121,7 +121,7 @@ export async function createReservation(bandId, venueId, time) {
   }
 }
 
-export async function createUser(username, password) {
+export async function createUser(username, password, type, name) {
   const user = await prisma.user.findUnique({
     where: {
       username: username,
@@ -134,6 +134,7 @@ export async function createUser(username, password) {
     data: {
       username: username,
       password: password,
+      type: type
     },
   });
   return result;
