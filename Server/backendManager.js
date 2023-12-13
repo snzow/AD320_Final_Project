@@ -1,4 +1,4 @@
-import {makeReservationDb, createReservation, getUserByUsername, login, getBands, getVenues, getReservationsByBand, getReservationsByVenue, getReservations, createUser, createBandAvailability} from './dbManager.js';
+import {makeReservationDb, createReservation, getUserByUsername, login, getBands, getVenues, getReservationsByBand, getReservationsByVenue, getReservations, createUser, createBandAvailability, createBandRating} from './dbManager.js';
 
 /**
  *  takes a reservation object containing a venueName, bandName, and Datetime. Attempts to create a reservation in the database.
@@ -151,6 +151,10 @@ export async function searchBandsAsync(string){
 
 export async function getBandRatingsAsync(bandId){
   return await getBandRatings(bandId);
+}
+
+export async function createBandRatingAsync(bandId, rating){
+  return await createBandRating(bandId,rating);
 }
 
 // module.exports = {

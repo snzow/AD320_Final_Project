@@ -266,6 +266,16 @@ export async function getBandRatings(bandId) {
   }
 }
 
+export async function createBandRating(bandId, rating){
+  const result = await prisma.rating.create({
+    data : {
+      bandId : bandId,
+      rating : rating
+    }
+  })
+  return result;
+}
+
 export async function init() {}
 
 main()
