@@ -1,3 +1,4 @@
+// import from backend
 import {createAccountAsync, createBandAvailabilityAsync, getAvailabilitiesByBandAsync, getBandsAsync, getReservationsByBandAsync, getUserInfoByUsernameAsync, loginAsync} from "./Server/backendManager.js"
 import express from 'express';
 import cors from 'cors';
@@ -13,6 +14,9 @@ app.use(multer().none());
 app.use(express.json());
 app.use(cors());
 
+/**
+ * Default endpoint to show server is working
+ */
 app.get('/', (req, res) => {
   res.send('Hello from the backend!');
 });
@@ -21,66 +25,20 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
+/**
+ * Returns a list of all bands in the database
+ */
 app.get('/api/bands', async function (req, res) {
   res.type('json');
 
   let response = await getBandsAsync()
 
-/*  `
-  [ {
-      "id": "1",
-      "name": "Aodhan and the Programmers",
-      "description": "Nerdcore house beats",
-      "manager": "2"
-    },
-    {
-      "id": "2",
-      "name": "The DOM Element Collective",
-      "description": "Lo-fi EDM chillwave",
-      "manager": "1"
-    }
-  ]
-  `
-*/
-  //console.log(response);
   res.send(response);
 });
 
-app.get('/api/bands/:bandId', function (req, res) {
-  res.type('json');
-
-  let response = "";
-  let bandId = req.params.bandId;
-
-  if (bandId=="1") {
-      response = 
-      `
-      {
-        "id": "1",
-        "name": "Aodhan and the Programmers",
-        "description": "Nerdcore house beats",
-        "manager": "2"
-      }
-      `;
-  } else if ( bandId=="2") {
-    response = 
-    `
-    {
-      "id": "2",
-      "name": "The DOM Element Collective",
-      "description": "Lo-fi EDM chillwave",
-      "manager": "1"
-    }
-    `;
-  } else {
-    res.status(400).send(`{"error": "Band with id ${bandId} not found" }`);
-    return;
-  }
-
-  res.send(response);
-
-});
-
+/**
+ * Gets a list of all the band availability postings
+ */
 app.get('/api/allBandAvailabilities', async function (req, res) {
   res.type('json');
 
@@ -106,32 +64,12 @@ app.get('/api/allBandAvailabilities', async function (req, res) {
     }
     allBandAvailabilities.push(bandAv);
   }
-/*    {
-        "id": "1",
-        "name": "Aodhan and the Programmers",
-        "description": "Nerdcore house beats",
-        "availableTimes": [
-          { "timeId": "101", "timeString": "2023-12-10 19:00" },
-          { "timeId": "102", "timeString": "2023-12-12 20:00" },
-          { "timeId": "103", "timeString": "2023-12-15 21:00" }
-      ]
-    },
-    {
-        "id": "2",
-        "name": "The DOM Element Collective",
-        "description": "Lo-fi EDM chillwave",
-        "availableTimes": [
-          { "timeId": "201", "timeString": "2023-12-11 18:00" },
-          { "timeId": "202", "timeString": "2023-12-13 19:30" },
-          { "timeId": "203", "timeString": "2023-12-16 20:00" }
-      ]
-    },
-];
-*/
-  console.log(JSON.stringify(allBandAvailabilities));
   res.send(JSON.stringify(allBandAvailabilities));
 });
 
+/**
+ * Adds a timeframe to the band's availability list
+ */
 app.post('/api/band/addAvailability', async function (req, res) {
   res.type('text');
   
@@ -145,6 +83,9 @@ app.post('/api/band/addAvailability', async function (req, res) {
   res.status(201).send('Added successfully');
 });
 
+/**
+ * Returns all the availability listings for a given band
+ */
 app.get('/api/bandAvailability/:bandId', function (req, res) {
   res.type('json');
 
@@ -178,6 +119,9 @@ app.get('/api/bandAvailability/:bandId', function (req, res) {
   res.send(JSON.stringify(response));
 });
 
+/**
+ * Gets all the reservations for a particular band
+ */
 app.get('/api/band_schedule/:bandId', async function (req, res) {
   res.type('json');
 
@@ -213,6 +157,9 @@ app.get('/api/band_schedule/:bandId', async function (req, res) {
   res.send(reservations);
 });
 
+/**
+ * Reserves a particular band availability for a venue
+ */
 app.post('/api/reserve/:timeId', function (req, res) {
   let timeId = req.params.timeId;
 
@@ -223,7 +170,9 @@ app.post('/api/reserve/:timeId', function (req, res) {
   res.json({ message: `Reservation request for time ID ${timeId} received` });
 });
 
-
+/**
+ * Gets the full list of venues in the database
+ */
 app.get('/api/venues', function (req, res) {
   res.type('json');
 
@@ -247,6 +196,9 @@ app.get('/api/venues', function (req, res) {
   res.send(response);
 });
 
+/**
+ * Gets all the info for a particular venue
+ */
 app.get('/api/venues/:venueId', function (req, res) {
   res.type('json');
 
@@ -282,6 +234,9 @@ app.get('/api/venues/:venueId', function (req, res) {
 
 });
 
+/**
+ * Gets all the reservations at a particular venue
+ */
 app.get('/api/venue_reservations/:venueId', function (req, res) {
   let venueId = req.params.venueId;
 
@@ -308,7 +263,9 @@ app.get('/api/venue_reservations/:venueId', function (req, res) {
   res.json(filteredReservations);
 });
 
-
+/**
+ * Gets the full list of users from the database
+ */
 app.get('/api/users', function (req, res) {
   res.type('json');
 
@@ -349,6 +306,9 @@ app.get('/api/users', function (req, res) {
   res.send(response);
 });
 
+/**
+ * Gets the detailed info for the user with a particular id
+ */
 app.get('/api/users/:userId', function (req, res) {
   res.type('json');
 
@@ -408,6 +368,9 @@ app.get('/api/users/:userId', function (req, res) {
 
 });
 
+/**
+ * Gets the detailed info for the user with a particular username
+ */
 app.get('/api/userInfo/:userName', async function (req, res) {
   console.log('in api');
   let userName = req.params.userName;
@@ -482,6 +445,9 @@ app.get('/api/userInfo/:userName', async function (req, res) {
   */
 });
 
+/**
+ * Logs a user into the database
+ */
 app.post('/api/login', async function (req, res) {
   let user = req.body.username;
   let pw = req.body.password;
@@ -495,6 +461,9 @@ app.post('/api/login', async function (req, res) {
   
 });
 
+/**
+ * Creates a new user account
+ */
 app.post('/api/users/newUser'), async function (req, res) {
   res.type('text');
 
@@ -532,9 +501,9 @@ app.post('/api/users/newUser'), async function (req, res) {
   res.status(200).send("User successfully created!");
 }
 
-
-
-// POST endpoint for account creation
+/**
+ * Creates a new account
+ */
 app.post('/api/createAccount', async (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
