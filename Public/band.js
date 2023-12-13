@@ -5,7 +5,6 @@
  * It allows a band to add available time and to see their booked sschedule.
  **/
 
-import { getUserByUsername } from "../Server/dbManager";
 
 /**
  * Self-invoking function to manage band booking operations.
@@ -123,7 +122,7 @@ import { getUserByUsername } from "../Server/dbManager";
         const startTime = document.getElementById('start-time').value;
         const venue = document.getElementById('venue').value;
 
-        const userInfo = await getUserByUsername(localStorage.getItem("username"));
+        //const userInfo = await getUserByUsername(localStorage.getItem("username"));
 
 
         // Add the new booking to the bookingSchedule array
