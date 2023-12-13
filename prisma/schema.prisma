@@ -51,8 +51,8 @@ model User{
   id Int @id @default(autoincrement())
   username String @unique
   password String
-  email String @unique
-  name String
+  email String? @unique
+  name String?
   type String @default("band")
   band Band? @relation()
   venue Venue? @relation()
