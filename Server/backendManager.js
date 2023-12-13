@@ -143,6 +143,11 @@ export async function getUserInfoByUsernameAsync(username){
     const response = await getUserByUsername(username);
     return response;
 }
+
+export async function searchBandsAsync(string){
+  const matches = await searchBands(string);
+  return matches;
+}
 // module.exports = {
 //   loginAsync,
 //   createAccountAsync,

@@ -24,6 +24,7 @@ model Band {
   id Int @id @default(autoincrement())
   bandName String @unique
   gigsPlayed Int @default(0)
+  location String @default("Seattle")
   manager User? @relation(fields : [userId], references : [id])
   userId Int? @unique
   reservations Reservation[]

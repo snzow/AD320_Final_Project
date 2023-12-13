@@ -237,6 +237,12 @@ export async function createBand(bandName, username = null) {
   return band;
 }
 
+export async function searchBands(keyword){
+  const bands = await getBands();
+  const retVal = bands.filter(item => item.bandName.includes(keyword) || item.gigsPlayed > keyword || item.location.includes(keyword));
+  return retVal;
+}
+
 export async function init() {}
 
 main()
