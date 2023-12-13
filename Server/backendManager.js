@@ -77,8 +77,8 @@ export async function getReservationsAsync() {
  * @param {string} password 
  * @returns 
  */
-export async function createAccountAsync(username, password) {
-  const result = await createUser(username, password);
+export async function createAccountAsync(username, password, type, name) {
+  const result = await createUser(username, password, type, name);
   if (result == 'Username Taken') {
     return {
       code: 400,

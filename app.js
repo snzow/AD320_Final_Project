@@ -1,4 +1,4 @@
-import {createBandAvailabilityAsync, getAvailabilitiesByBandAsync, getBandsAsync, getReservationsByBandAsync, getUserInfoByUsernameAsync, loginAsync} from "./Server/backendManager.js"
+import {createAccountAsync, createBandAvailabilityAsync, getAvailabilitiesByBandAsync, getBandsAsync, getReservationsByBandAsync, getUserInfoByUsernameAsync, loginAsync} from "./Server/backendManager.js"
 import express from 'express';
 import cors from 'cors';
 import { login } from "./Server/dbManager.js";
@@ -534,8 +534,11 @@ app.post('/api/users/newUser'), async function (req, res) {
 
 
 // POST endpoint for account creation
-app.post('/api/createAccount', (req, res) => {
-  const { username, password } = req.body;
+app.post('/api/createAccount', async (req, res) => {
+  let username = req.body.username;
+  let password = req.body.password;
+  let type = req.body.userType;
+  let entityName = req.body.bandOrVenueName;
 
   if (!username || !password) {
     res.status(400).json({ message: "Username or password is missing" });
@@ -547,6 +550,7 @@ app.post('/api/createAccount', (req, res) => {
   } else {
     // Here, you would typically add logic to create an account
     // For now, we're just sending a success response
+    await createAccountAsync(username, password, type, entityName);
     res.status(201).json({ message: `Account created successfully for user ${username}` });
   }
 });
