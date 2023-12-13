@@ -91,6 +91,7 @@ app.get('/api/allBandAvailabilities', async function (req, res) {
   let time = {};
 
   for (let band of bands) {
+    bandAv = {};
     availabilities = await getAvailabilitiesByBandAsync(band.bandName);
     bandAv['id'] = band.id;
     bandAv['name'] = band.bandName;
@@ -127,7 +128,7 @@ app.get('/api/allBandAvailabilities', async function (req, res) {
     },
 ];
 */
-
+  console.log(JSON.stringify(allBandAvailabilities));
   res.send(JSON.stringify(allBandAvailabilities));
 });
 
